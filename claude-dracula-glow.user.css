@@ -1,0 +1,40 @@
+/* ==UserStyle==
+@name           Claude in Chrome — Dracula glow
+@namespace      rdj.xyz
+@version        1.0.0
+@description    Recolors the Claude browser-control indicator from brand orange (#D97757) to Dracula purple (#BD93F9).
+@author         rdj
+==/UserStyle== */
+
+@-moz-document regexp(".*") {
+
+  /* ---- The inner-edge glow (the main event) ---- */
+  #claude-agent-glow-border-inner {
+    box-shadow:
+      inset 0 0 15px rgba(189, 147, 249, 0.7),
+      inset 0 0 25px rgba(189, 147, 249, 0.5),
+      inset 0 0 35px rgba(189, 147, 249, 0.2) !important;
+  }
+
+  /* ---- The phantom cursor Claude moves around ---- */
+  #claude-phantom-cursor-styled {
+    filter:
+      drop-shadow(0 0 4px rgba(189, 147, 249, 0.9))
+      drop-shadow(0 0 10px rgba(189, 147, 249, 0.45)) !important;
+  }
+  #claude-phantom-cursor-styled path:first-child {
+    fill: #BD93F9 !important;
+    stroke: #BD93F9 !important;
+  }
+
+  /* ---- The floating "Stop" pill + tooltips ---- */
+  #claude-agent-stop-button {
+    box-shadow:
+      0 40px 80px rgba(189, 147, 249, 0.24),
+      0 4px 14px rgba(189, 147, 249, 0.24) !important;
+  }
+  #claude-static-chat-tooltip,
+  #claude-static-close-tooltip {
+    box-shadow: 0 4px 14px rgba(189, 147, 249, 0.24) !important;
+  }
+}

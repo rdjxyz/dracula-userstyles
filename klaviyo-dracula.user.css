@@ -1,0 +1,1688 @@
+/* ==UserStyle==
+@name           Klaviyo — Dracula
+@namespace      rdj.xyz
+@version        1.1.0
+@description    The official Dracula palette applied to the Klaviyo app, built on
+                Klaviyo's own "atlas" design tokens. The email template editor
+                canvas is deliberately left untouched so your designs stay true.
+@author         rdj.xyz
+@license        MIT
+==/UserStyle== */
+
+/* ---------------------------------------------------------------------------
+   HOW THIS WORKS
+
+   Klaviyo ships ~870 semantic colour tokens (--color-background-*,
+   --color-border-*, --color-typography-*, --color-foreground-*,
+   --color-surface-*, --color-data-*) in a single `:root, ::after, ::before`
+   rule. This stylesheet re-points those tokens at the Dracula palette, so the
+   theme follows Klaviyo's own component semantics instead of fighting them.
+
+   Tokens WITHOUT `-inverse` were authored for a light UI, so they get
+      flipped to dark. Tokens WITH `-inverse` were already authored to sit on
+      dark surfaces, so they are largely preserved and just re-tinted.
+
+
+   THE EMAIL EDITOR CANVAS IS NEVER THEMED -- and this takes real work.
+
+   Klaviyo renders the email preview and the drag-and-drop editor into `srcdoc`
+   iframes. It is tempting to assume `@-moz-document domain("klaviyo.com")`
+   excludes them, since they resolve to `about:srcdoc`. IT DOES NOT. Stylus
+   treats a srcdoc frame as inheriting its parent's origin and injects there
+   too -- verified by finding this stylesheet's own colours inside the email
+   frame. Left unhandled, the theme repaints Klaviyo's in-iframe editor chrome
+   (merge-tag pills, selection outlines) and, worse, sets the email body's
+   inherited text colour, so any email text without an explicit colour turns
+   unreadable.
+
+   The fix is the `:root[lang]` gate on every token rule below. Klaviyo's app
+   document carries `<html lang="en-US">`; the email srcdoc document's `<html>`
+   has NO attributes at all, so `:root[lang]` cannot match inside it and the
+   entire token block is inert there. `[lang]` also comes from the server HTML,
+   so there is no mount-timing flash. Structural rules are separately gated on
+   `#fender-root`, which likewise never exists inside an email.
+   --------------------------------------------------------------------------- */
+
+@-moz-document domain("klaviyo.com") {
+
+/* === Dracula palette ==================================================== */
+:root[lang] {
+  --drac-bg-deep: #191A21;
+  --drac-bg:      #21222C;
+  --drac-surface: #282A36;
+  --drac-surface-2: #31333F;
+  --drac-surface-3: #3C3F51;
+  --drac-line:    #44475A;
+  --drac-line-2:  #565973;
+  --drac-comment: #6272A4;
+  --drac-fg:      #F8F8F2;
+  --drac-fg-2:    #D6D7E0;
+  --drac-fg-3:    #9AA0C3;
+  --drac-cyan:    #8BE9FD;
+  --drac-green:   #50FA7B;
+  --drac-orange:  #FFB86C;
+  --drac-pink:    #FF79C6;
+  --drac-purple:  #BD93F9;
+  --drac-red:     #FF5555;
+  --drac-yellow:  #F1FA8C;
+
+  color-scheme: dark;
+}
+
+/* === Klaviyo token overrides ============================================
+   NOTE THE SELECTOR. Klaviyo declares its tokens on `:root, ::after, ::before`,
+   which means every pseudo-element gets the value declared DIRECTLY on it. A
+   directly-declared value always beats an inherited one, so overriding `:root`
+   alone -- even with !important -- leaves every pseudo-element still reading
+   Klaviyo's own value. That silently breaks things like the modal backdrop,
+   which paints `--color-surface-overlay-subtle` on `::before`.
+   ======================================================================== */
+:root[lang],
+:root[lang] ::before,
+:root[lang] ::after,
+:root[lang]::before,
+:root[lang]::after {
+
+  /* --- app surfaces --- */
+  --color-surface-app-background: #21222C !important;
+  --color-surface-app-frame: #191A21 !important;
+  --color-surface-primary-base: #282A36 !important;
+  --color-surface-primary-focused: #282A36 !important;
+  --color-surface-primary-hovered: #31333F !important;
+  --color-surface-primary-pressed: #31333F !important;
+  --color-surface-primary-selected: #31333F !important;
+  --color-surface-primary-disabled: #282A36 !important;
+  --color-surface-primary-readonly: #282A36 !important;
+  --color-surface-secondary-base: #21222C !important;
+  --color-surface-secondary-focused: #21222C !important;
+  --color-surface-secondary-hovered: #31333F !important;
+  --color-surface-secondary-pressed: #31333F !important;
+  --color-surface-secondary-selected: #31333F !important;
+  --color-surface-secondary-disabled: #21222C !important;
+  --color-surface-secondary-readonly: #21222C !important;
+  --color-surface-inverse: #44475A !important;
+  --color-surface-overlay-emphasis: rgba(25,26,33,0.80) !important;
+  --color-surface-overlay-subtle: rgba(25,26,33,0.62) !important;
+  --color-surface-overlay-inverse: rgba(248,248,242,0.10) !important;
+  --color-surface-kai-base: #373249 !important;
+  --color-surface-kai-inverse: #3A324C !important;
+
+  /* --- brand --- */
+  --color-brand-charcoal-base: #F8F8F2 !important;
+  --color-brand-white-base: #282A36 !important;
+  --color-brand-poppy-base: #FF79C6 !important;
+  --color-brand-cotton-base: #21222C !important;
+
+  /* --- primary action (Klaviyo ships near-black; we make it purple) --- */
+  --color-background-primary-base: #BD93F9 !important;
+  --color-background-primary-focused: #C5A0FA !important;
+  --color-background-primary-hovered: #C5A0FA !important;
+  --color-background-primary-pressed: #A37ED6 !important;
+  --color-background-primary-selected: #A37ED6 !important;
+  --color-background-primary-disabled: #31333F !important;
+  --color-background-primary-readonly: #31333F !important;
+  --color-foreground-primary-base: #21222C !important;
+  --color-foreground-primary-focused: #21222C !important;
+  --color-foreground-primary-hovered: #21222C !important;
+  --color-foreground-primary-pressed: #21222C !important;
+  --color-foreground-primary-selected: #21222C !important;
+  --color-foreground-primary-disabled: #6272A4 !important;
+  --color-foreground-primary-readonly: #21222C !important;
+  --color-background-primary-inverse-base: #F8F8F2 !important;
+  --color-background-primary-inverse-focused: #F8F8F2 !important;
+  --color-background-primary-inverse-hovered: #FCFCF8 !important;
+  --color-background-primary-inverse-pressed: #D6D7E0 !important;
+  --color-background-primary-inverse-selected: #D6D7E0 !important;
+  --color-background-primary-inverse-disabled: #31333F !important;
+  --color-background-primary-inverse-readonly: #31333F !important;
+  --color-foreground-primary-inverse-base: #21222C !important;
+  --color-foreground-primary-inverse-focused: #21222C !important;
+  --color-foreground-primary-inverse-hovered: #21222C !important;
+  --color-foreground-primary-inverse-pressed: #21222C !important;
+  --color-foreground-primary-inverse-selected: #21222C !important;
+  --color-foreground-primary-inverse-disabled: #6272A4 !important;
+  --color-foreground-primary-inverse-readonly: #21222C !important;
+
+  /* --- secondary action --- */
+  --color-background-secondary-base: #282A36 !important;
+  --color-background-secondary-focused: #282A36 !important;
+  --color-background-secondary-hovered: #31333F !important;
+  --color-background-secondary-pressed: #3C3F51 !important;
+  --color-background-secondary-selected: #3C3F51 !important;
+  --color-background-secondary-disabled: #21222C !important;
+  --color-background-secondary-readonly: #21222C !important;
+  --color-foreground-secondary-base: #F8F8F2 !important;
+  --color-foreground-secondary-focused: #F8F8F2 !important;
+  --color-foreground-secondary-hovered: #F8F8F2 !important;
+  --color-foreground-secondary-pressed: #F8F8F2 !important;
+  --color-foreground-secondary-selected: #F8F8F2 !important;
+  --color-foreground-secondary-disabled: #6272A4 !important;
+  --color-foreground-secondary-readonly: #F8F8F2 !important;
+  --color-background-secondary-inverse-base: rgba(248,248,242,0.10) !important;
+  --color-background-secondary-inverse-focused: rgba(248,248,242,0.10) !important;
+  --color-background-secondary-inverse-hovered: rgba(248,248,242,0.16) !important;
+  --color-background-secondary-inverse-pressed: rgba(248,248,242,0.22) !important;
+  --color-background-secondary-inverse-selected: rgba(248,248,242,0.22) !important;
+  --color-background-secondary-inverse-disabled: rgba(248,248,242,0.05) !important;
+  --color-background-secondary-inverse-readonly: rgba(248,248,242,0.05) !important;
+  --color-foreground-secondary-inverse-base: #F8F8F2 !important;
+  --color-foreground-secondary-inverse-focused: #F8F8F2 !important;
+  --color-foreground-secondary-inverse-hovered: #F8F8F2 !important;
+  --color-foreground-secondary-inverse-pressed: #F8F8F2 !important;
+  --color-foreground-secondary-inverse-selected: #F8F8F2 !important;
+  --color-foreground-secondary-inverse-disabled: #6272A4 !important;
+  --color-foreground-secondary-inverse-readonly: #F8F8F2 !important;
+
+  /* --- tertiary / ghost action --- */
+  --color-background-tertiary-base: transparent !important;
+  --color-background-tertiary-focused: rgba(248,248,242,0.08) !important;
+  --color-background-tertiary-hovered: rgba(248,248,242,0.08) !important;
+  --color-background-tertiary-pressed: rgba(248,248,242,0.14) !important;
+  --color-background-tertiary-selected: rgba(248,248,242,0.14) !important;
+  --color-background-tertiary-disabled: transparent !important;
+  --color-background-tertiary-readonly: transparent !important;
+  --color-foreground-tertiary-base: #F8F8F2 !important;
+  --color-foreground-tertiary-focused: #F8F8F2 !important;
+  --color-foreground-tertiary-hovered: #F8F8F2 !important;
+  --color-foreground-tertiary-pressed: #F8F8F2 !important;
+  --color-foreground-tertiary-selected: #F8F8F2 !important;
+  --color-foreground-tertiary-disabled: #6272A4 !important;
+  --color-foreground-tertiary-readonly: #F8F8F2 !important;
+  --color-background-tertiary-inverse-base: transparent !important;
+  --color-background-tertiary-inverse-focused: rgba(248,248,242,0.08) !important;
+  --color-background-tertiary-inverse-hovered: rgba(248,248,242,0.08) !important;
+  --color-background-tertiary-inverse-pressed: rgba(248,248,242,0.14) !important;
+  --color-background-tertiary-inverse-selected: rgba(248,248,242,0.14) !important;
+  --color-background-tertiary-inverse-disabled: transparent !important;
+  --color-background-tertiary-inverse-readonly: transparent !important;
+  --color-foreground-tertiary-inverse-base: #F8F8F2 !important;
+  --color-foreground-tertiary-inverse-focused: #F8F8F2 !important;
+  --color-foreground-tertiary-inverse-hovered: #F8F8F2 !important;
+  --color-foreground-tertiary-inverse-pressed: #F8F8F2 !important;
+  --color-foreground-tertiary-inverse-selected: #F8F8F2 !important;
+  --color-foreground-tertiary-inverse-disabled: #6272A4 !important;
+  --color-foreground-tertiary-inverse-readonly: #F8F8F2 !important;
+
+  /* --- form inputs --- */
+  --color-background-input-base: #21222C !important;
+  --color-background-input-focused: #21222C !important;
+  --color-background-input-hovered: #21222C !important;
+  --color-background-input-pressed: #21222C !important;
+  --color-background-input-selected: #21222C !important;
+  --color-background-input-disabled: #31333F !important;
+  --color-background-input-readonly: #31333F !important;
+  --color-background-input-inverse-base: #191A21 !important;
+  --color-background-input-inverse-focused: #191A21 !important;
+  --color-background-input-inverse-hovered: #191A21 !important;
+  --color-background-input-inverse-pressed: #191A21 !important;
+  --color-background-input-inverse-selected: #191A21 !important;
+  --color-background-input-inverse-disabled: #31333F !important;
+  --color-background-input-inverse-readonly: #31333F !important;
+  --color-foreground-input-base: #F8F8F2 !important;
+  --color-foreground-input-focused: #F8F8F2 !important;
+  --color-foreground-input-hovered: #F8F8F2 !important;
+  --color-foreground-input-pressed: #F8F8F2 !important;
+  --color-foreground-input-selected: #F8F8F2 !important;
+  --color-foreground-input-disabled: #6272A4 !important;
+  --color-foreground-input-readonly: #F8F8F2 !important;
+  --color-background-card-inverse-hovered: #31333F !important;
+
+  /* --- inverse surface --- */
+  --color-background-inverse-base: #F8F8F2 !important;
+  --color-background-inverse-focused: #F8F8F2 !important;
+  --color-background-inverse-hovered: #FCFCF8 !important;
+  --color-background-inverse-pressed: #D6D7E0 !important;
+  --color-background-inverse-selected: #D6D7E0 !important;
+  --color-background-inverse-disabled: #31333F !important;
+  --color-background-inverse-readonly: #31333F !important;
+
+  /* --- semantic accents --- */
+
+  /* positive -> #50FA7B */
+  --color-background-positive-emphasis-base: #50FA7B !important;
+  --color-background-positive-emphasis-focused: #65FB8B !important;
+  --color-background-positive-emphasis-hovered: #65FB8B !important;
+  --color-background-positive-emphasis-pressed: #45D76A !important;
+  --color-background-positive-emphasis-selected: #45D76A !important;
+  --color-background-positive-emphasis-disabled: #31333F !important;
+  --color-background-positive-emphasis-readonly: #31333F !important;
+  --color-background-positive-emphasis-contrast-base: #38AF56 !important;
+  --color-background-positive-emphasis-contrast-focused: #50B96A !important;
+  --color-background-positive-emphasis-contrast-hovered: #50B96A !important;
+  --color-background-positive-emphasis-contrast-pressed: #30964A !important;
+  --color-background-positive-emphasis-contrast-selected: #30964A !important;
+  --color-background-positive-emphasis-contrast-disabled: #31333F !important;
+  --color-background-positive-emphasis-contrast-readonly: #31333F !important;
+  --color-background-positive-subtle-base: rgba(80,250,123,0.14) !important;
+  --color-background-positive-subtle-focused: rgba(80,250,123,0.20) !important;
+  --color-background-positive-subtle-hovered: rgba(80,250,123,0.20) !important;
+  --color-background-positive-subtle-pressed: rgba(80,250,123,0.26) !important;
+  --color-background-positive-subtle-selected: rgba(80,250,123,0.26) !important;
+  --color-background-positive-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-positive-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-positive-state-base: #21222C !important;
+  --color-background-positive-state-focused: #21222C !important;
+  --color-background-positive-state-hovered: #21222C !important;
+  --color-background-positive-state-pressed: #21222C !important;
+  --color-background-positive-state-selected: #21222C !important;
+  --color-background-positive-state-disabled: #21222C !important;
+  --color-background-positive-state-readonly: #21222C !important;
+  --color-border-positive-emphasis-base: #50FA7B !important;
+  --color-border-positive-emphasis-focused: #65FB8B !important;
+  --color-border-positive-emphasis-hovered: #65FB8B !important;
+  --color-border-positive-emphasis-pressed: #45D76A !important;
+  --color-border-positive-emphasis-selected: #45D76A !important;
+  --color-border-positive-emphasis-disabled: #31333F !important;
+  --color-border-positive-emphasis-readonly: #31333F !important;
+  --color-border-positive-emphasis-contrast-base: #38AF56 !important;
+  --color-border-positive-emphasis-contrast-focused: #50B96A !important;
+  --color-border-positive-emphasis-contrast-hovered: #50B96A !important;
+  --color-border-positive-emphasis-contrast-pressed: #30964A !important;
+  --color-border-positive-emphasis-contrast-selected: #30964A !important;
+  --color-border-positive-emphasis-contrast-disabled: #31333F !important;
+  --color-border-positive-emphasis-contrast-readonly: #31333F !important;
+  --color-border-positive-subtle-base: rgba(80,250,123,0.40) !important;
+  --color-border-positive-subtle-focused: rgba(80,250,123,0.40) !important;
+  --color-border-positive-subtle-hovered: rgba(80,250,123,0.40) !important;
+  --color-border-positive-subtle-pressed: rgba(80,250,123,0.40) !important;
+  --color-border-positive-subtle-selected: rgba(80,250,123,0.40) !important;
+  --color-border-positive-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-positive-subtle-readonly: rgba(80,250,123,0.40) !important;
+  --color-border-positive-state-base: #50FA7B !important;
+  --color-border-positive-state-focused: #50FA7B !important;
+  --color-border-positive-state-hovered: #50FA7B !important;
+  --color-border-positive-state-pressed: #50FA7B !important;
+  --color-border-positive-state-selected: #50FA7B !important;
+  --color-border-positive-state-disabled: #50FA7B !important;
+  --color-border-positive-state-readonly: #50FA7B !important;
+  --color-foreground-positive-emphasis-base: #21222C !important;
+  --color-foreground-positive-emphasis-focused: #21222C !important;
+  --color-foreground-positive-emphasis-hovered: #21222C !important;
+  --color-foreground-positive-emphasis-pressed: #21222C !important;
+  --color-foreground-positive-emphasis-selected: #21222C !important;
+  --color-foreground-positive-emphasis-disabled: #6272A4 !important;
+  --color-foreground-positive-emphasis-readonly: #21222C !important;
+  --color-foreground-positive-subtle-base: #50FA7B !important;
+  --color-foreground-positive-subtle-focused: #50FA7B !important;
+  --color-foreground-positive-subtle-hovered: #50FA7B !important;
+  --color-foreground-positive-subtle-pressed: #50FA7B !important;
+  --color-foreground-positive-subtle-selected: #50FA7B !important;
+  --color-foreground-positive-subtle-disabled: #6272A4 !important;
+  --color-foreground-positive-subtle-readonly: #50FA7B !important;
+  --color-foreground-positive-state-base: #D6D7E0 !important;
+  --color-foreground-positive-state-focused: #D6D7E0 !important;
+  --color-foreground-positive-state-hovered: #D6D7E0 !important;
+  --color-foreground-positive-state-pressed: #D6D7E0 !important;
+  --color-foreground-positive-state-selected: #D6D7E0 !important;
+  --color-foreground-positive-state-disabled: #D6D7E0 !important;
+  --color-foreground-positive-state-readonly: #D6D7E0 !important;
+  --color-typography-positive: #50FA7B !important;
+  --color-typography-positive-base: #50FA7B !important;
+  --color-typography-positive-inverse: #62FA88 !important;
+  --color-typography-positive-subtle-base: #50FA7B !important;
+  --color-typography-positive-subtle-inverse: #62FA88 !important;
+
+  /* negative -> #FF5555 */
+  --color-background-negative-emphasis-base: #FF5555 !important;
+  --color-background-negative-emphasis-focused: #FF6969 !important;
+  --color-background-negative-emphasis-hovered: #FF6969 !important;
+  --color-background-negative-emphasis-pressed: #DB4949 !important;
+  --color-background-negative-emphasis-selected: #DB4949 !important;
+  --color-background-negative-emphasis-disabled: #31333F !important;
+  --color-background-negative-emphasis-readonly: #31333F !important;
+  --color-background-negative-emphasis-contrast-base: #B23C3C !important;
+  --color-background-negative-emphasis-contrast-focused: #BB5353 !important;
+  --color-background-negative-emphasis-contrast-hovered: #BB5353 !important;
+  --color-background-negative-emphasis-contrast-pressed: #993434 !important;
+  --color-background-negative-emphasis-contrast-selected: #993434 !important;
+  --color-background-negative-emphasis-contrast-disabled: #31333F !important;
+  --color-background-negative-emphasis-contrast-readonly: #31333F !important;
+  --color-background-negative-subtle-base: rgba(255,85,85,0.14) !important;
+  --color-background-negative-subtle-focused: rgba(255,85,85,0.20) !important;
+  --color-background-negative-subtle-hovered: rgba(255,85,85,0.20) !important;
+  --color-background-negative-subtle-pressed: rgba(255,85,85,0.26) !important;
+  --color-background-negative-subtle-selected: rgba(255,85,85,0.26) !important;
+  --color-background-negative-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-negative-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-negative-state-base: #21222C !important;
+  --color-background-negative-state-focused: #21222C !important;
+  --color-background-negative-state-hovered: #21222C !important;
+  --color-background-negative-state-pressed: #21222C !important;
+  --color-background-negative-state-selected: #21222C !important;
+  --color-background-negative-state-disabled: #21222C !important;
+  --color-background-negative-state-readonly: #21222C !important;
+  --color-border-negative-emphasis-base: #FF5555 !important;
+  --color-border-negative-emphasis-focused: #FF6969 !important;
+  --color-border-negative-emphasis-hovered: #FF6969 !important;
+  --color-border-negative-emphasis-pressed: #DB4949 !important;
+  --color-border-negative-emphasis-selected: #DB4949 !important;
+  --color-border-negative-emphasis-disabled: #31333F !important;
+  --color-border-negative-emphasis-readonly: #31333F !important;
+  --color-border-negative-emphasis-contrast-base: #B23C3C !important;
+  --color-border-negative-emphasis-contrast-focused: #BB5353 !important;
+  --color-border-negative-emphasis-contrast-hovered: #BB5353 !important;
+  --color-border-negative-emphasis-contrast-pressed: #993434 !important;
+  --color-border-negative-emphasis-contrast-selected: #993434 !important;
+  --color-border-negative-emphasis-contrast-disabled: #31333F !important;
+  --color-border-negative-emphasis-contrast-readonly: #31333F !important;
+  --color-border-negative-subtle-base: rgba(255,85,85,0.40) !important;
+  --color-border-negative-subtle-focused: rgba(255,85,85,0.40) !important;
+  --color-border-negative-subtle-hovered: rgba(255,85,85,0.40) !important;
+  --color-border-negative-subtle-pressed: rgba(255,85,85,0.40) !important;
+  --color-border-negative-subtle-selected: rgba(255,85,85,0.40) !important;
+  --color-border-negative-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-negative-subtle-readonly: rgba(255,85,85,0.40) !important;
+  --color-border-negative-state-base: #FF5555 !important;
+  --color-border-negative-state-focused: #FF5555 !important;
+  --color-border-negative-state-hovered: #FF5555 !important;
+  --color-border-negative-state-pressed: #FF5555 !important;
+  --color-border-negative-state-selected: #FF5555 !important;
+  --color-border-negative-state-disabled: #FF5555 !important;
+  --color-border-negative-state-readonly: #FF5555 !important;
+  --color-foreground-negative-emphasis-base: #21222C !important;
+  --color-foreground-negative-emphasis-focused: #21222C !important;
+  --color-foreground-negative-emphasis-hovered: #21222C !important;
+  --color-foreground-negative-emphasis-pressed: #21222C !important;
+  --color-foreground-negative-emphasis-selected: #21222C !important;
+  --color-foreground-negative-emphasis-disabled: #6272A4 !important;
+  --color-foreground-negative-emphasis-readonly: #21222C !important;
+  --color-foreground-negative-subtle-base: #FF5555 !important;
+  --color-foreground-negative-subtle-focused: #FF5555 !important;
+  --color-foreground-negative-subtle-hovered: #FF5555 !important;
+  --color-foreground-negative-subtle-pressed: #FF5555 !important;
+  --color-foreground-negative-subtle-selected: #FF5555 !important;
+  --color-foreground-negative-subtle-disabled: #6272A4 !important;
+  --color-foreground-negative-subtle-readonly: #FF5555 !important;
+  --color-foreground-negative-state-base: #D6D7E0 !important;
+  --color-foreground-negative-state-focused: #D6D7E0 !important;
+  --color-foreground-negative-state-hovered: #D6D7E0 !important;
+  --color-foreground-negative-state-pressed: #D6D7E0 !important;
+  --color-foreground-negative-state-selected: #D6D7E0 !important;
+  --color-foreground-negative-state-disabled: #D6D7E0 !important;
+  --color-foreground-negative-state-readonly: #D6D7E0 !important;
+  --color-typography-negative: #FF5555 !important;
+  --color-typography-negative-base: #FF5555 !important;
+  --color-typography-negative-inverse: #FF6666 !important;
+  --color-typography-negative-subtle-base: #FF5555 !important;
+  --color-typography-negative-subtle-inverse: #FF6666 !important;
+
+  /* attention -> #FFB86C */
+  --color-background-attention-emphasis-base: #FFB86C !important;
+  --color-background-attention-emphasis-focused: #FFC17E !important;
+  --color-background-attention-emphasis-hovered: #FFC17E !important;
+  --color-background-attention-emphasis-pressed: #DB9E5D !important;
+  --color-background-attention-emphasis-selected: #DB9E5D !important;
+  --color-background-attention-emphasis-disabled: #31333F !important;
+  --color-background-attention-emphasis-readonly: #31333F !important;
+  --color-background-attention-emphasis-contrast-base: #B2814C !important;
+  --color-background-attention-emphasis-contrast-focused: #BB9061 !important;
+  --color-background-attention-emphasis-contrast-hovered: #BB9061 !important;
+  --color-background-attention-emphasis-contrast-pressed: #996F41 !important;
+  --color-background-attention-emphasis-contrast-selected: #996F41 !important;
+  --color-background-attention-emphasis-contrast-disabled: #31333F !important;
+  --color-background-attention-emphasis-contrast-readonly: #31333F !important;
+  --color-background-attention-subtle-base: rgba(255,184,108,0.14) !important;
+  --color-background-attention-subtle-focused: rgba(255,184,108,0.20) !important;
+  --color-background-attention-subtle-hovered: rgba(255,184,108,0.20) !important;
+  --color-background-attention-subtle-pressed: rgba(255,184,108,0.26) !important;
+  --color-background-attention-subtle-selected: rgba(255,184,108,0.26) !important;
+  --color-background-attention-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-attention-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-attention-state-base: #21222C !important;
+  --color-background-attention-state-focused: #21222C !important;
+  --color-background-attention-state-hovered: #21222C !important;
+  --color-background-attention-state-pressed: #21222C !important;
+  --color-background-attention-state-selected: #21222C !important;
+  --color-background-attention-state-disabled: #21222C !important;
+  --color-background-attention-state-readonly: #21222C !important;
+  --color-border-attention-emphasis-base: #FFB86C !important;
+  --color-border-attention-emphasis-focused: #FFC17E !important;
+  --color-border-attention-emphasis-hovered: #FFC17E !important;
+  --color-border-attention-emphasis-pressed: #DB9E5D !important;
+  --color-border-attention-emphasis-selected: #DB9E5D !important;
+  --color-border-attention-emphasis-disabled: #31333F !important;
+  --color-border-attention-emphasis-readonly: #31333F !important;
+  --color-border-attention-emphasis-contrast-base: #B2814C !important;
+  --color-border-attention-emphasis-contrast-focused: #BB9061 !important;
+  --color-border-attention-emphasis-contrast-hovered: #BB9061 !important;
+  --color-border-attention-emphasis-contrast-pressed: #996F41 !important;
+  --color-border-attention-emphasis-contrast-selected: #996F41 !important;
+  --color-border-attention-emphasis-contrast-disabled: #31333F !important;
+  --color-border-attention-emphasis-contrast-readonly: #31333F !important;
+  --color-border-attention-subtle-base: rgba(255,184,108,0.40) !important;
+  --color-border-attention-subtle-focused: rgba(255,184,108,0.40) !important;
+  --color-border-attention-subtle-hovered: rgba(255,184,108,0.40) !important;
+  --color-border-attention-subtle-pressed: rgba(255,184,108,0.40) !important;
+  --color-border-attention-subtle-selected: rgba(255,184,108,0.40) !important;
+  --color-border-attention-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-attention-subtle-readonly: rgba(255,184,108,0.40) !important;
+  --color-border-attention-state-base: #FFB86C !important;
+  --color-border-attention-state-focused: #FFB86C !important;
+  --color-border-attention-state-hovered: #FFB86C !important;
+  --color-border-attention-state-pressed: #FFB86C !important;
+  --color-border-attention-state-selected: #FFB86C !important;
+  --color-border-attention-state-disabled: #FFB86C !important;
+  --color-border-attention-state-readonly: #FFB86C !important;
+  --color-foreground-attention-emphasis-base: #21222C !important;
+  --color-foreground-attention-emphasis-focused: #21222C !important;
+  --color-foreground-attention-emphasis-hovered: #21222C !important;
+  --color-foreground-attention-emphasis-pressed: #21222C !important;
+  --color-foreground-attention-emphasis-selected: #21222C !important;
+  --color-foreground-attention-emphasis-disabled: #6272A4 !important;
+  --color-foreground-attention-emphasis-readonly: #21222C !important;
+  --color-foreground-attention-subtle-base: #FFB86C !important;
+  --color-foreground-attention-subtle-focused: #FFB86C !important;
+  --color-foreground-attention-subtle-hovered: #FFB86C !important;
+  --color-foreground-attention-subtle-pressed: #FFB86C !important;
+  --color-foreground-attention-subtle-selected: #FFB86C !important;
+  --color-foreground-attention-subtle-disabled: #6272A4 !important;
+  --color-foreground-attention-subtle-readonly: #FFB86C !important;
+  --color-foreground-attention-state-base: #D6D7E0 !important;
+  --color-foreground-attention-state-focused: #D6D7E0 !important;
+  --color-foreground-attention-state-hovered: #D6D7E0 !important;
+  --color-foreground-attention-state-pressed: #D6D7E0 !important;
+  --color-foreground-attention-state-selected: #D6D7E0 !important;
+  --color-foreground-attention-state-disabled: #D6D7E0 !important;
+  --color-foreground-attention-state-readonly: #D6D7E0 !important;
+  --color-typography-attention: #FFB86C !important;
+  --color-typography-attention-base: #FFB86C !important;
+  --color-typography-attention-inverse: #FFBF7B !important;
+  --color-typography-attention-subtle-base: #FFB86C !important;
+  --color-typography-attention-subtle-inverse: #FFBF7B !important;
+
+  /* caution -> #F1FA8C */
+  --color-background-caution-emphasis-base: #F1FA8C !important;
+  --color-background-caution-emphasis-focused: #F3FB9A !important;
+  --color-background-caution-emphasis-hovered: #F3FB9A !important;
+  --color-background-caution-emphasis-pressed: #CFD778 !important;
+  --color-background-caution-emphasis-selected: #CFD778 !important;
+  --color-background-caution-emphasis-disabled: #31333F !important;
+  --color-background-caution-emphasis-readonly: #31333F !important;
+  --color-background-caution-emphasis-contrast-base: #A9AF62 !important;
+  --color-background-caution-emphasis-contrast-focused: #B3B975 !important;
+  --color-background-caution-emphasis-contrast-hovered: #B3B975 !important;
+  --color-background-caution-emphasis-contrast-pressed: #919654 !important;
+  --color-background-caution-emphasis-contrast-selected: #919654 !important;
+  --color-background-caution-emphasis-contrast-disabled: #31333F !important;
+  --color-background-caution-emphasis-contrast-readonly: #31333F !important;
+  --color-background-caution-subtle-base: rgba(241,250,140,0.14) !important;
+  --color-background-caution-subtle-focused: rgba(241,250,140,0.20) !important;
+  --color-background-caution-subtle-hovered: rgba(241,250,140,0.20) !important;
+  --color-background-caution-subtle-pressed: rgba(241,250,140,0.26) !important;
+  --color-background-caution-subtle-selected: rgba(241,250,140,0.26) !important;
+  --color-background-caution-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-caution-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-caution-state-base: #21222C !important;
+  --color-background-caution-state-focused: #21222C !important;
+  --color-background-caution-state-hovered: #21222C !important;
+  --color-background-caution-state-pressed: #21222C !important;
+  --color-background-caution-state-selected: #21222C !important;
+  --color-background-caution-state-disabled: #21222C !important;
+  --color-background-caution-state-readonly: #21222C !important;
+  --color-border-caution-emphasis-base: #F1FA8C !important;
+  --color-border-caution-emphasis-focused: #F3FB9A !important;
+  --color-border-caution-emphasis-hovered: #F3FB9A !important;
+  --color-border-caution-emphasis-pressed: #CFD778 !important;
+  --color-border-caution-emphasis-selected: #CFD778 !important;
+  --color-border-caution-emphasis-disabled: #31333F !important;
+  --color-border-caution-emphasis-readonly: #31333F !important;
+  --color-border-caution-emphasis-contrast-base: #A9AF62 !important;
+  --color-border-caution-emphasis-contrast-focused: #B3B975 !important;
+  --color-border-caution-emphasis-contrast-hovered: #B3B975 !important;
+  --color-border-caution-emphasis-contrast-pressed: #919654 !important;
+  --color-border-caution-emphasis-contrast-selected: #919654 !important;
+  --color-border-caution-emphasis-contrast-disabled: #31333F !important;
+  --color-border-caution-emphasis-contrast-readonly: #31333F !important;
+  --color-border-caution-subtle-base: rgba(241,250,140,0.40) !important;
+  --color-border-caution-subtle-focused: rgba(241,250,140,0.40) !important;
+  --color-border-caution-subtle-hovered: rgba(241,250,140,0.40) !important;
+  --color-border-caution-subtle-pressed: rgba(241,250,140,0.40) !important;
+  --color-border-caution-subtle-selected: rgba(241,250,140,0.40) !important;
+  --color-border-caution-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-caution-subtle-readonly: rgba(241,250,140,0.40) !important;
+  --color-border-caution-state-base: #F1FA8C !important;
+  --color-border-caution-state-focused: #F1FA8C !important;
+  --color-border-caution-state-hovered: #F1FA8C !important;
+  --color-border-caution-state-pressed: #F1FA8C !important;
+  --color-border-caution-state-selected: #F1FA8C !important;
+  --color-border-caution-state-disabled: #F1FA8C !important;
+  --color-border-caution-state-readonly: #F1FA8C !important;
+  --color-foreground-caution-emphasis-base: #21222C !important;
+  --color-foreground-caution-emphasis-focused: #21222C !important;
+  --color-foreground-caution-emphasis-hovered: #21222C !important;
+  --color-foreground-caution-emphasis-pressed: #21222C !important;
+  --color-foreground-caution-emphasis-selected: #21222C !important;
+  --color-foreground-caution-emphasis-disabled: #6272A4 !important;
+  --color-foreground-caution-emphasis-readonly: #21222C !important;
+  --color-foreground-caution-subtle-base: #F1FA8C !important;
+  --color-foreground-caution-subtle-focused: #F1FA8C !important;
+  --color-foreground-caution-subtle-hovered: #F1FA8C !important;
+  --color-foreground-caution-subtle-pressed: #F1FA8C !important;
+  --color-foreground-caution-subtle-selected: #F1FA8C !important;
+  --color-foreground-caution-subtle-disabled: #6272A4 !important;
+  --color-foreground-caution-subtle-readonly: #F1FA8C !important;
+  --color-foreground-caution-state-base: #D6D7E0 !important;
+  --color-foreground-caution-state-focused: #D6D7E0 !important;
+  --color-foreground-caution-state-hovered: #D6D7E0 !important;
+  --color-foreground-caution-state-pressed: #D6D7E0 !important;
+  --color-foreground-caution-state-selected: #D6D7E0 !important;
+  --color-foreground-caution-state-disabled: #D6D7E0 !important;
+  --color-foreground-caution-state-readonly: #D6D7E0 !important;
+  --color-typography-caution: #F1FA8C !important;
+  --color-typography-caution-base: #F1FA8C !important;
+  --color-typography-caution-inverse: #F2FA98 !important;
+  --color-typography-caution-subtle-base: #F1FA8C !important;
+  --color-typography-caution-subtle-inverse: #F2FA98 !important;
+
+  /* info -> #8BE9FD */
+  --color-background-info-emphasis-base: #8BE9FD !important;
+  --color-background-info-emphasis-focused: #99ECFD !important;
+  --color-background-info-emphasis-hovered: #99ECFD !important;
+  --color-background-info-emphasis-pressed: #78C8DA !important;
+  --color-background-info-emphasis-selected: #78C8DA !important;
+  --color-background-info-emphasis-disabled: #31333F !important;
+  --color-background-info-emphasis-readonly: #31333F !important;
+  --color-background-info-emphasis-contrast-base: #61A3B1 !important;
+  --color-background-info-emphasis-contrast-focused: #74AEBA !important;
+  --color-background-info-emphasis-contrast-hovered: #74AEBA !important;
+  --color-background-info-emphasis-contrast-pressed: #538C98 !important;
+  --color-background-info-emphasis-contrast-selected: #538C98 !important;
+  --color-background-info-emphasis-contrast-disabled: #31333F !important;
+  --color-background-info-emphasis-contrast-readonly: #31333F !important;
+  --color-background-info-subtle-base: rgba(139,233,253,0.14) !important;
+  --color-background-info-subtle-focused: rgba(139,233,253,0.20) !important;
+  --color-background-info-subtle-hovered: rgba(139,233,253,0.20) !important;
+  --color-background-info-subtle-pressed: rgba(139,233,253,0.26) !important;
+  --color-background-info-subtle-selected: rgba(139,233,253,0.26) !important;
+  --color-background-info-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-info-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-info-state-base: #21222C !important;
+  --color-background-info-state-focused: #21222C !important;
+  --color-background-info-state-hovered: #21222C !important;
+  --color-background-info-state-pressed: #21222C !important;
+  --color-background-info-state-selected: #21222C !important;
+  --color-background-info-state-disabled: #21222C !important;
+  --color-background-info-state-readonly: #21222C !important;
+  --color-border-info-emphasis-base: #8BE9FD !important;
+  --color-border-info-emphasis-focused: #99ECFD !important;
+  --color-border-info-emphasis-hovered: #99ECFD !important;
+  --color-border-info-emphasis-pressed: #78C8DA !important;
+  --color-border-info-emphasis-selected: #78C8DA !important;
+  --color-border-info-emphasis-disabled: #31333F !important;
+  --color-border-info-emphasis-readonly: #31333F !important;
+  --color-border-info-emphasis-contrast-base: #61A3B1 !important;
+  --color-border-info-emphasis-contrast-focused: #74AEBA !important;
+  --color-border-info-emphasis-contrast-hovered: #74AEBA !important;
+  --color-border-info-emphasis-contrast-pressed: #538C98 !important;
+  --color-border-info-emphasis-contrast-selected: #538C98 !important;
+  --color-border-info-emphasis-contrast-disabled: #31333F !important;
+  --color-border-info-emphasis-contrast-readonly: #31333F !important;
+  --color-border-info-subtle-base: rgba(139,233,253,0.40) !important;
+  --color-border-info-subtle-focused: rgba(139,233,253,0.40) !important;
+  --color-border-info-subtle-hovered: rgba(139,233,253,0.40) !important;
+  --color-border-info-subtle-pressed: rgba(139,233,253,0.40) !important;
+  --color-border-info-subtle-selected: rgba(139,233,253,0.40) !important;
+  --color-border-info-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-info-subtle-readonly: rgba(139,233,253,0.40) !important;
+  --color-border-info-state-base: #8BE9FD !important;
+  --color-border-info-state-focused: #8BE9FD !important;
+  --color-border-info-state-hovered: #8BE9FD !important;
+  --color-border-info-state-pressed: #8BE9FD !important;
+  --color-border-info-state-selected: #8BE9FD !important;
+  --color-border-info-state-disabled: #8BE9FD !important;
+  --color-border-info-state-readonly: #8BE9FD !important;
+  --color-foreground-info-emphasis-base: #21222C !important;
+  --color-foreground-info-emphasis-focused: #21222C !important;
+  --color-foreground-info-emphasis-hovered: #21222C !important;
+  --color-foreground-info-emphasis-pressed: #21222C !important;
+  --color-foreground-info-emphasis-selected: #21222C !important;
+  --color-foreground-info-emphasis-disabled: #6272A4 !important;
+  --color-foreground-info-emphasis-readonly: #21222C !important;
+  --color-foreground-info-subtle-base: #8BE9FD !important;
+  --color-foreground-info-subtle-focused: #8BE9FD !important;
+  --color-foreground-info-subtle-hovered: #8BE9FD !important;
+  --color-foreground-info-subtle-pressed: #8BE9FD !important;
+  --color-foreground-info-subtle-selected: #8BE9FD !important;
+  --color-foreground-info-subtle-disabled: #6272A4 !important;
+  --color-foreground-info-subtle-readonly: #8BE9FD !important;
+  --color-foreground-info-state-base: #D6D7E0 !important;
+  --color-foreground-info-state-focused: #D6D7E0 !important;
+  --color-foreground-info-state-hovered: #D6D7E0 !important;
+  --color-foreground-info-state-pressed: #D6D7E0 !important;
+  --color-foreground-info-state-selected: #D6D7E0 !important;
+  --color-foreground-info-state-disabled: #D6D7E0 !important;
+  --color-foreground-info-state-readonly: #D6D7E0 !important;
+  --color-typography-info: #8BE9FD !important;
+  --color-typography-info-base: #8BE9FD !important;
+  --color-typography-info-inverse: #97EBFD !important;
+  --color-typography-info-subtle-base: #8BE9FD !important;
+  --color-typography-info-subtle-inverse: #97EBFD !important;
+
+  /* highlighted -> #BD93F9 */
+  --color-background-highlighted-emphasis-base: #BD93F9 !important;
+  --color-background-highlighted-emphasis-focused: #C5A0FA !important;
+  --color-background-highlighted-emphasis-hovered: #C5A0FA !important;
+  --color-background-highlighted-emphasis-pressed: #A37ED6 !important;
+  --color-background-highlighted-emphasis-selected: #A37ED6 !important;
+  --color-background-highlighted-emphasis-disabled: #31333F !important;
+  --color-background-highlighted-emphasis-readonly: #31333F !important;
+  --color-background-highlighted-emphasis-contrast-base: #8467AE !important;
+  --color-background-highlighted-emphasis-contrast-focused: #9379B8 !important;
+  --color-background-highlighted-emphasis-contrast-hovered: #9379B8 !important;
+  --color-background-highlighted-emphasis-contrast-pressed: #725996 !important;
+  --color-background-highlighted-emphasis-contrast-selected: #725996 !important;
+  --color-background-highlighted-emphasis-contrast-disabled: #31333F !important;
+  --color-background-highlighted-emphasis-contrast-readonly: #31333F !important;
+  --color-background-highlighted-subtle-base: rgba(189,147,249,0.14) !important;
+  --color-background-highlighted-subtle-focused: rgba(189,147,249,0.20) !important;
+  --color-background-highlighted-subtle-hovered: rgba(189,147,249,0.20) !important;
+  --color-background-highlighted-subtle-pressed: rgba(189,147,249,0.26) !important;
+  --color-background-highlighted-subtle-selected: rgba(189,147,249,0.26) !important;
+  --color-background-highlighted-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-highlighted-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-highlighted-state-base: #21222C !important;
+  --color-background-highlighted-state-focused: #21222C !important;
+  --color-background-highlighted-state-hovered: #21222C !important;
+  --color-background-highlighted-state-pressed: #21222C !important;
+  --color-background-highlighted-state-selected: #21222C !important;
+  --color-background-highlighted-state-disabled: #21222C !important;
+  --color-background-highlighted-state-readonly: #21222C !important;
+  --color-border-highlighted-emphasis-base: #BD93F9 !important;
+  --color-border-highlighted-emphasis-focused: #C5A0FA !important;
+  --color-border-highlighted-emphasis-hovered: #C5A0FA !important;
+  --color-border-highlighted-emphasis-pressed: #A37ED6 !important;
+  --color-border-highlighted-emphasis-selected: #A37ED6 !important;
+  --color-border-highlighted-emphasis-disabled: #31333F !important;
+  --color-border-highlighted-emphasis-readonly: #31333F !important;
+  --color-border-highlighted-emphasis-contrast-base: #8467AE !important;
+  --color-border-highlighted-emphasis-contrast-focused: #9379B8 !important;
+  --color-border-highlighted-emphasis-contrast-hovered: #9379B8 !important;
+  --color-border-highlighted-emphasis-contrast-pressed: #725996 !important;
+  --color-border-highlighted-emphasis-contrast-selected: #725996 !important;
+  --color-border-highlighted-emphasis-contrast-disabled: #31333F !important;
+  --color-border-highlighted-emphasis-contrast-readonly: #31333F !important;
+  --color-border-highlighted-subtle-base: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-subtle-focused: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-subtle-hovered: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-subtle-pressed: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-subtle-selected: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-highlighted-subtle-readonly: rgba(189,147,249,0.40) !important;
+  --color-border-highlighted-state-base: #BD93F9 !important;
+  --color-border-highlighted-state-focused: #BD93F9 !important;
+  --color-border-highlighted-state-hovered: #BD93F9 !important;
+  --color-border-highlighted-state-pressed: #BD93F9 !important;
+  --color-border-highlighted-state-selected: #BD93F9 !important;
+  --color-border-highlighted-state-disabled: #BD93F9 !important;
+  --color-border-highlighted-state-readonly: #BD93F9 !important;
+  --color-foreground-highlighted-emphasis-base: #21222C !important;
+  --color-foreground-highlighted-emphasis-focused: #21222C !important;
+  --color-foreground-highlighted-emphasis-hovered: #21222C !important;
+  --color-foreground-highlighted-emphasis-pressed: #21222C !important;
+  --color-foreground-highlighted-emphasis-selected: #21222C !important;
+  --color-foreground-highlighted-emphasis-disabled: #6272A4 !important;
+  --color-foreground-highlighted-emphasis-readonly: #21222C !important;
+  --color-foreground-highlighted-subtle-base: #BD93F9 !important;
+  --color-foreground-highlighted-subtle-focused: #BD93F9 !important;
+  --color-foreground-highlighted-subtle-hovered: #BD93F9 !important;
+  --color-foreground-highlighted-subtle-pressed: #BD93F9 !important;
+  --color-foreground-highlighted-subtle-selected: #BD93F9 !important;
+  --color-foreground-highlighted-subtle-disabled: #6272A4 !important;
+  --color-foreground-highlighted-subtle-readonly: #BD93F9 !important;
+  --color-foreground-highlighted-state-base: #D6D7E0 !important;
+  --color-foreground-highlighted-state-focused: #D6D7E0 !important;
+  --color-foreground-highlighted-state-hovered: #D6D7E0 !important;
+  --color-foreground-highlighted-state-pressed: #D6D7E0 !important;
+  --color-foreground-highlighted-state-selected: #D6D7E0 !important;
+  --color-foreground-highlighted-state-disabled: #D6D7E0 !important;
+  --color-foreground-highlighted-state-readonly: #D6D7E0 !important;
+  --color-typography-highlighted: #BD93F9 !important;
+  --color-typography-highlighted-base: #BD93F9 !important;
+  --color-typography-highlighted-inverse: #C49EFA !important;
+  --color-typography-highlighted-subtle-base: #BD93F9 !important;
+  --color-typography-highlighted-subtle-inverse: #C49EFA !important;
+
+  /* intelligence -> #BD93F9 */
+  --color-background-intelligence-emphasis-base: #BD93F9 !important;
+  --color-background-intelligence-emphasis-focused: #C5A0FA !important;
+  --color-background-intelligence-emphasis-hovered: #C5A0FA !important;
+  --color-background-intelligence-emphasis-pressed: #A37ED6 !important;
+  --color-background-intelligence-emphasis-selected: #A37ED6 !important;
+  --color-background-intelligence-emphasis-disabled: #31333F !important;
+  --color-background-intelligence-emphasis-readonly: #31333F !important;
+  --color-background-intelligence-emphasis-contrast-base: #8467AE !important;
+  --color-background-intelligence-emphasis-contrast-focused: #9379B8 !important;
+  --color-background-intelligence-emphasis-contrast-hovered: #9379B8 !important;
+  --color-background-intelligence-emphasis-contrast-pressed: #725996 !important;
+  --color-background-intelligence-emphasis-contrast-selected: #725996 !important;
+  --color-background-intelligence-emphasis-contrast-disabled: #31333F !important;
+  --color-background-intelligence-emphasis-contrast-readonly: #31333F !important;
+  --color-background-intelligence-subtle-base: rgba(189,147,249,0.14) !important;
+  --color-background-intelligence-subtle-focused: rgba(189,147,249,0.20) !important;
+  --color-background-intelligence-subtle-hovered: rgba(189,147,249,0.20) !important;
+  --color-background-intelligence-subtle-pressed: rgba(189,147,249,0.26) !important;
+  --color-background-intelligence-subtle-selected: rgba(189,147,249,0.26) !important;
+  --color-background-intelligence-subtle-disabled: rgba(98,114,164,0.10) !important;
+  --color-background-intelligence-subtle-readonly: rgba(98,114,164,0.10) !important;
+  --color-background-intelligence-state-base: #21222C !important;
+  --color-background-intelligence-state-focused: #21222C !important;
+  --color-background-intelligence-state-hovered: #21222C !important;
+  --color-background-intelligence-state-pressed: #21222C !important;
+  --color-background-intelligence-state-selected: #21222C !important;
+  --color-background-intelligence-state-disabled: #21222C !important;
+  --color-background-intelligence-state-readonly: #21222C !important;
+  --color-border-intelligence-emphasis-base: #BD93F9 !important;
+  --color-border-intelligence-emphasis-focused: #C5A0FA !important;
+  --color-border-intelligence-emphasis-hovered: #C5A0FA !important;
+  --color-border-intelligence-emphasis-pressed: #A37ED6 !important;
+  --color-border-intelligence-emphasis-selected: #A37ED6 !important;
+  --color-border-intelligence-emphasis-disabled: #31333F !important;
+  --color-border-intelligence-emphasis-readonly: #31333F !important;
+  --color-border-intelligence-emphasis-contrast-base: #8467AE !important;
+  --color-border-intelligence-emphasis-contrast-focused: #9379B8 !important;
+  --color-border-intelligence-emphasis-contrast-hovered: #9379B8 !important;
+  --color-border-intelligence-emphasis-contrast-pressed: #725996 !important;
+  --color-border-intelligence-emphasis-contrast-selected: #725996 !important;
+  --color-border-intelligence-emphasis-contrast-disabled: #31333F !important;
+  --color-border-intelligence-emphasis-contrast-readonly: #31333F !important;
+  --color-border-intelligence-subtle-base: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-subtle-focused: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-subtle-hovered: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-subtle-pressed: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-subtle-selected: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-subtle-disabled: rgba(98,114,164,0.25) !important;
+  --color-border-intelligence-subtle-readonly: rgba(189,147,249,0.40) !important;
+  --color-border-intelligence-state-base: #BD93F9 !important;
+  --color-border-intelligence-state-focused: #BD93F9 !important;
+  --color-border-intelligence-state-hovered: #BD93F9 !important;
+  --color-border-intelligence-state-pressed: #BD93F9 !important;
+  --color-border-intelligence-state-selected: #BD93F9 !important;
+  --color-border-intelligence-state-disabled: #BD93F9 !important;
+  --color-border-intelligence-state-readonly: #BD93F9 !important;
+  --color-foreground-intelligence-emphasis-base: #21222C !important;
+  --color-foreground-intelligence-emphasis-focused: #21222C !important;
+  --color-foreground-intelligence-emphasis-hovered: #21222C !important;
+  --color-foreground-intelligence-emphasis-pressed: #21222C !important;
+  --color-foreground-intelligence-emphasis-selected: #21222C !important;
+  --color-foreground-intelligence-emphasis-disabled: #6272A4 !important;
+  --color-foreground-intelligence-emphasis-readonly: #21222C !important;
+  --color-foreground-intelligence-subtle-base: #BD93F9 !important;
+  --color-foreground-intelligence-subtle-focused: #BD93F9 !important;
+  --color-foreground-intelligence-subtle-hovered: #BD93F9 !important;
+  --color-foreground-intelligence-subtle-pressed: #BD93F9 !important;
+  --color-foreground-intelligence-subtle-selected: #BD93F9 !important;
+  --color-foreground-intelligence-subtle-disabled: #6272A4 !important;
+  --color-foreground-intelligence-subtle-readonly: #BD93F9 !important;
+  --color-foreground-intelligence-state-base: #D6D7E0 !important;
+  --color-foreground-intelligence-state-focused: #D6D7E0 !important;
+  --color-foreground-intelligence-state-hovered: #D6D7E0 !important;
+  --color-foreground-intelligence-state-pressed: #D6D7E0 !important;
+  --color-foreground-intelligence-state-selected: #D6D7E0 !important;
+  --color-foreground-intelligence-state-disabled: #D6D7E0 !important;
+  --color-foreground-intelligence-state-readonly: #D6D7E0 !important;
+  --color-typography-intelligence: #BD93F9 !important;
+  --color-typography-intelligence-base: #BD93F9 !important;
+  --color-typography-intelligence-inverse: #C49EFA !important;
+  --color-typography-intelligence-subtle-base: #BD93F9 !important;
+  --color-typography-intelligence-subtle-inverse: #C49EFA !important;
+
+  /* neutral */
+  --color-background-neutral-emphasis-base: #44475A !important;
+  --color-background-neutral-emphasis-focused: #44475A !important;
+  --color-background-neutral-emphasis-hovered: #565973 !important;
+  --color-background-neutral-emphasis-pressed: #3C3F51 !important;
+  --color-background-neutral-emphasis-selected: #3C3F51 !important;
+  --color-background-neutral-emphasis-disabled: #31333F !important;
+  --color-background-neutral-emphasis-readonly: #31333F !important;
+  --color-background-neutral-subtle-base: #31333F !important;
+  --color-background-neutral-subtle-focused: #31333F !important;
+  --color-background-neutral-subtle-hovered: #3C3F51 !important;
+  --color-background-neutral-subtle-pressed: #44475A !important;
+  --color-background-neutral-subtle-selected: #44475A !important;
+  --color-background-neutral-subtle-disabled: #21222C !important;
+  --color-background-neutral-subtle-readonly: #21222C !important;
+  --color-background-neutral-state-base: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-focused: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-hovered: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-pressed: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-selected: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-disabled: rgba(248,248,242,0.08) !important;
+  --color-background-neutral-state-readonly: rgba(248,248,242,0.08) !important;
+  --color-border-neutral-emphasis-base: #565973 !important;
+  --color-border-neutral-emphasis-focused: #565973 !important;
+  --color-border-neutral-emphasis-hovered: #6272A4 !important;
+  --color-border-neutral-emphasis-pressed: #6272A4 !important;
+  --color-border-neutral-emphasis-selected: #6272A4 !important;
+  --color-border-neutral-emphasis-disabled: #31333F !important;
+  --color-border-neutral-emphasis-readonly: #31333F !important;
+  --color-border-neutral-subtle-base: #44475A !important;
+  --color-border-neutral-subtle-focused: #44475A !important;
+  --color-border-neutral-subtle-hovered: #44475A !important;
+  --color-border-neutral-subtle-pressed: #44475A !important;
+  --color-border-neutral-subtle-selected: #44475A !important;
+  --color-border-neutral-subtle-disabled: #44475A !important;
+  --color-border-neutral-subtle-readonly: #44475A !important;
+  --color-foreground-neutral-emphasis-base: #F8F8F2 !important;
+  --color-foreground-neutral-emphasis-focused: #F8F8F2 !important;
+  --color-foreground-neutral-emphasis-hovered: #F8F8F2 !important;
+  --color-foreground-neutral-emphasis-pressed: #F8F8F2 !important;
+  --color-foreground-neutral-emphasis-selected: #F8F8F2 !important;
+  --color-foreground-neutral-emphasis-disabled: #6272A4 !important;
+  --color-foreground-neutral-emphasis-readonly: #F8F8F2 !important;
+  --color-foreground-neutral-subtle-base: #D6D7E0 !important;
+  --color-foreground-neutral-subtle-focused: #D6D7E0 !important;
+  --color-foreground-neutral-subtle-hovered: #D6D7E0 !important;
+  --color-foreground-neutral-subtle-pressed: #D6D7E0 !important;
+  --color-foreground-neutral-subtle-selected: #D6D7E0 !important;
+  --color-foreground-neutral-subtle-disabled: #6272A4 !important;
+  --color-foreground-neutral-subtle-readonly: #D6D7E0 !important;
+  --color-typography-neutral-subtle-base: #D6D7E0 !important;
+  --color-typography-neutral-subtle-inverse: #F8F8F2 !important;
+
+  /* --- Kai (AI) surfaces --- */
+  --color-background-kai-primary-base: #282A36 !important;
+  --color-background-kai-primary-focused: #282A36 !important;
+  --color-background-kai-primary-hovered: #31333F !important;
+  --color-background-kai-primary-pressed: #3C3F51 !important;
+  --color-background-kai-primary-selected: #3C3F51 !important;
+  --color-background-kai-primary-disabled: #31333F !important;
+  --color-background-kai-primary-readonly: #31333F !important;
+  --color-background-kai-primary-inverse-base: #21222C !important;
+  --color-background-kai-primary-inverse-focused: #21222C !important;
+  --color-background-kai-primary-inverse-hovered: #282A36 !important;
+  --color-background-kai-primary-inverse-pressed: #31333F !important;
+  --color-background-kai-primary-inverse-selected: #31333F !important;
+  --color-background-kai-primary-inverse-disabled: #31333F !important;
+  --color-background-kai-primary-inverse-readonly: #31333F !important;
+  --color-border-kai-primary-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-primary-inverse-readonly: rgba(189,147,249,0.45) !important;
+  --color-background-kai-secondary-base: #282A36 !important;
+  --color-background-kai-secondary-focused: #282A36 !important;
+  --color-background-kai-secondary-hovered: #31333F !important;
+  --color-background-kai-secondary-pressed: #3C3F51 !important;
+  --color-background-kai-secondary-selected: #3C3F51 !important;
+  --color-background-kai-secondary-disabled: #31333F !important;
+  --color-background-kai-secondary-readonly: #31333F !important;
+  --color-background-kai-secondary-inverse-base: #21222C !important;
+  --color-background-kai-secondary-inverse-focused: #21222C !important;
+  --color-background-kai-secondary-inverse-hovered: #282A36 !important;
+  --color-background-kai-secondary-inverse-pressed: #31333F !important;
+  --color-background-kai-secondary-inverse-selected: #31333F !important;
+  --color-background-kai-secondary-inverse-disabled: #31333F !important;
+  --color-background-kai-secondary-inverse-readonly: #31333F !important;
+  --color-border-kai-secondary-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-secondary-inverse-readonly: rgba(189,147,249,0.45) !important;
+  --color-background-kai-tertiary-base: #282A36 !important;
+  --color-background-kai-tertiary-focused: #282A36 !important;
+  --color-background-kai-tertiary-hovered: #31333F !important;
+  --color-background-kai-tertiary-pressed: #3C3F51 !important;
+  --color-background-kai-tertiary-selected: #3C3F51 !important;
+  --color-background-kai-tertiary-disabled: #31333F !important;
+  --color-background-kai-tertiary-readonly: #31333F !important;
+  --color-background-kai-tertiary-inverse-base: #21222C !important;
+  --color-background-kai-tertiary-inverse-focused: #21222C !important;
+  --color-background-kai-tertiary-inverse-hovered: #282A36 !important;
+  --color-background-kai-tertiary-inverse-pressed: #31333F !important;
+  --color-background-kai-tertiary-inverse-selected: #31333F !important;
+  --color-background-kai-tertiary-inverse-disabled: #31333F !important;
+  --color-background-kai-tertiary-inverse-readonly: #31333F !important;
+  --color-border-kai-tertiary-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-kai-tertiary-inverse-readonly: rgba(189,147,249,0.45) !important;
+  --color-background-kai-subtle-base: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-focused: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-hovered: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-pressed: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-selected: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-disabled: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-subtle-readonly: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-background-kai-emphasis-base: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-focused: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-hovered: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-pressed: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-selected: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-disabled: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-emphasis-readonly: linear-gradient(120deg, #FF79C6 0%, #BD93F9 55%, #8BE9FD 100%) !important;
+  --color-background-kai-subtle-animated: linear-gradient(120deg, rgba(255,121,198,0.18) 0%, rgba(189,147,249,0.18) 100%) !important;
+  --color-foreground-kai-primary-base: #BD93F9 !important;
+  --color-foreground-kai-primary-focused: #C5A0FA !important;
+  --color-foreground-kai-primary-hovered: #C5A0FA !important;
+  --color-foreground-kai-primary-pressed: #A37ED6 !important;
+  --color-foreground-kai-primary-selected: #A37ED6 !important;
+  --color-foreground-kai-primary-disabled: #6272A4 !important;
+  --color-foreground-kai-primary-readonly: #BD93F9 !important;
+  --color-foreground-kai-primary-inverse-base: #C49EFA !important;
+  --color-foreground-kai-primary-inverse-focused: #C49EFA !important;
+  --color-foreground-kai-primary-inverse-hovered: #C49EFA !important;
+  --color-foreground-kai-primary-inverse-pressed: #C49EFA !important;
+  --color-foreground-kai-primary-inverse-selected: #C49EFA !important;
+  --color-foreground-kai-primary-inverse-disabled: #6272A4 !important;
+  --color-foreground-kai-primary-inverse-readonly: #C49EFA !important;
+  --color-foreground-kai-secondary-base: #FF79C6 !important;
+  --color-foreground-kai-secondary-focused: #FF89CD !important;
+  --color-foreground-kai-secondary-hovered: #FF89CD !important;
+  --color-foreground-kai-secondary-pressed: #DB68AA !important;
+  --color-foreground-kai-secondary-selected: #DB68AA !important;
+  --color-foreground-kai-secondary-disabled: #6272A4 !important;
+  --color-foreground-kai-secondary-readonly: #FF79C6 !important;
+  --color-foreground-kai-secondary-inverse-base: #FF86CC !important;
+  --color-foreground-kai-secondary-inverse-focused: #FF86CC !important;
+  --color-foreground-kai-secondary-inverse-hovered: #FF86CC !important;
+  --color-foreground-kai-secondary-inverse-pressed: #FF86CC !important;
+  --color-foreground-kai-secondary-inverse-selected: #FF86CC !important;
+  --color-foreground-kai-secondary-inverse-disabled: #6272A4 !important;
+  --color-foreground-kai-secondary-inverse-readonly: #FF86CC !important;
+  --color-foreground-kai-tertiary-base: #8BE9FD !important;
+  --color-foreground-kai-tertiary-focused: #99ECFD !important;
+  --color-foreground-kai-tertiary-hovered: #99ECFD !important;
+  --color-foreground-kai-tertiary-pressed: #78C8DA !important;
+  --color-foreground-kai-tertiary-selected: #78C8DA !important;
+  --color-foreground-kai-tertiary-disabled: #6272A4 !important;
+  --color-foreground-kai-tertiary-readonly: #8BE9FD !important;
+  --color-foreground-kai-tertiary-inverse-base: #97EBFD !important;
+  --color-foreground-kai-tertiary-inverse-focused: #97EBFD !important;
+  --color-foreground-kai-tertiary-inverse-hovered: #97EBFD !important;
+  --color-foreground-kai-tertiary-inverse-pressed: #97EBFD !important;
+  --color-foreground-kai-tertiary-inverse-selected: #97EBFD !important;
+  --color-foreground-kai-tertiary-inverse-disabled: #6272A4 !important;
+  --color-foreground-kai-tertiary-inverse-readonly: #97EBFD !important;
+  --color-foreground-kai-subtle-base: #BD93F9 !important;
+  --color-foreground-kai-subtle-focused: #BD93F9 !important;
+  --color-foreground-kai-subtle-hovered: #BD93F9 !important;
+  --color-foreground-kai-subtle-pressed: #BD93F9 !important;
+  --color-foreground-kai-subtle-selected: #BD93F9 !important;
+  --color-foreground-kai-subtle-disabled: #6272A4 !important;
+  --color-foreground-kai-subtle-readonly: #BD93F9 !important;
+  --color-typography-kai-primary-base: #F8F8F2 !important;
+  --color-typography-kai-primary-disabled: #6272A4 !important;
+  --color-typography-kai-secondary-base: #D6D7E0 !important;
+  --color-typography-kai-secondary-disabled: #6272A4 !important;
+  --color-typography-kai-tertiary-base: #9AA0C3 !important;
+  --color-typography-kai-tertiary-disabled: #6272A4 !important;
+  --color-typography-kai-subtle-base: #BD93F9 !important;
+  --color-typography-kai-subtle-disabled: #6272A4 !important;
+  --color-background-intelligence-primary-base: #373249 !important;
+  --color-background-intelligence-primary-focused: #373249 !important;
+  --color-background-intelligence-primary-hovered: #433B59 !important;
+  --color-background-intelligence-primary-pressed: #50446A !important;
+  --color-background-intelligence-primary-selected: #50446A !important;
+  --color-background-intelligence-primary-disabled: #31333F !important;
+  --color-background-intelligence-primary-readonly: #31333F !important;
+  --color-background-intelligence-primary-inverse-base: #302B3F !important;
+  --color-background-intelligence-primary-inverse-focused: #302B3F !important;
+  --color-background-intelligence-primary-inverse-hovered: #3D3551 !important;
+  --color-background-intelligence-primary-inverse-pressed: #4A3E62 !important;
+  --color-background-intelligence-primary-inverse-selected: #4A3E62 !important;
+  --color-background-intelligence-primary-inverse-disabled: #31333F !important;
+  --color-background-intelligence-primary-inverse-readonly: #31333F !important;
+  --color-border-intelligence-primary-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-primary-inverse-readonly: rgba(189,147,249,0.45) !important;
+  --color-background-intelligence-secondary-base: #373249 !important;
+  --color-background-intelligence-secondary-focused: #373249 !important;
+  --color-background-intelligence-secondary-hovered: #433B59 !important;
+  --color-background-intelligence-secondary-pressed: #50446A !important;
+  --color-background-intelligence-secondary-selected: #50446A !important;
+  --color-background-intelligence-secondary-disabled: #31333F !important;
+  --color-background-intelligence-secondary-readonly: #31333F !important;
+  --color-background-intelligence-secondary-inverse-base: #302B3F !important;
+  --color-background-intelligence-secondary-inverse-focused: #302B3F !important;
+  --color-background-intelligence-secondary-inverse-hovered: #3D3551 !important;
+  --color-background-intelligence-secondary-inverse-pressed: #4A3E62 !important;
+  --color-background-intelligence-secondary-inverse-selected: #4A3E62 !important;
+  --color-background-intelligence-secondary-inverse-disabled: #31333F !important;
+  --color-background-intelligence-secondary-inverse-readonly: #31333F !important;
+  --color-border-intelligence-secondary-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-secondary-inverse-readonly: rgba(189,147,249,0.45) !important;
+  --color-background-intelligence-tertiary-base: #373249 !important;
+  --color-background-intelligence-tertiary-focused: #373249 !important;
+  --color-background-intelligence-tertiary-hovered: #433B59 !important;
+  --color-background-intelligence-tertiary-pressed: #50446A !important;
+  --color-background-intelligence-tertiary-selected: #50446A !important;
+  --color-background-intelligence-tertiary-disabled: #31333F !important;
+  --color-background-intelligence-tertiary-readonly: #31333F !important;
+  --color-background-intelligence-tertiary-inverse-base: #302B3F !important;
+  --color-background-intelligence-tertiary-inverse-focused: #302B3F !important;
+  --color-background-intelligence-tertiary-inverse-hovered: #3D3551 !important;
+  --color-background-intelligence-tertiary-inverse-pressed: #4A3E62 !important;
+  --color-background-intelligence-tertiary-inverse-selected: #4A3E62 !important;
+  --color-background-intelligence-tertiary-inverse-disabled: #31333F !important;
+  --color-background-intelligence-tertiary-inverse-readonly: #31333F !important;
+  --color-border-intelligence-tertiary-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-readonly: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-base: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-focused: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-hovered: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-pressed: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-selected: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-disabled: rgba(189,147,249,0.45) !important;
+  --color-border-intelligence-tertiary-inverse-readonly: rgba(189,147,249,0.45) !important;
+
+  /* --- borders --- */
+  --color-border-primary-base: #44475A !important;
+  --color-border-primary-focused: #44475A !important;
+  --color-border-primary-hovered: #565973 !important;
+  --color-border-primary-pressed: #6272A4 !important;
+  --color-border-primary-selected: #6272A4 !important;
+  --color-border-primary-disabled: #31333F !important;
+  --color-border-primary-readonly: #31333F !important;
+  --color-border-primary-inverse-base: #44475A !important;
+  --color-border-primary-inverse-focused: #44475A !important;
+  --color-border-primary-inverse-hovered: #565973 !important;
+  --color-border-primary-inverse-pressed: #6272A4 !important;
+  --color-border-primary-inverse-selected: #6272A4 !important;
+  --color-border-primary-inverse-disabled: #31333F !important;
+  --color-border-primary-inverse-readonly: #31333F !important;
+  --color-border-secondary-base: #44475A !important;
+  --color-border-secondary-focused: #44475A !important;
+  --color-border-secondary-hovered: #565973 !important;
+  --color-border-secondary-pressed: #6272A4 !important;
+  --color-border-secondary-selected: #6272A4 !important;
+  --color-border-secondary-disabled: #31333F !important;
+  --color-border-secondary-readonly: #31333F !important;
+  --color-border-secondary-inverse-base: #44475A !important;
+  --color-border-secondary-inverse-focused: #44475A !important;
+  --color-border-secondary-inverse-hovered: #565973 !important;
+  --color-border-secondary-inverse-pressed: #6272A4 !important;
+  --color-border-secondary-inverse-selected: #6272A4 !important;
+  --color-border-secondary-inverse-disabled: #31333F !important;
+  --color-border-secondary-inverse-readonly: #31333F !important;
+  --color-border-default-base: #44475A !important;
+  --color-border-default-focused: #44475A !important;
+  --color-border-default-hovered: #565973 !important;
+  --color-border-default-pressed: #6272A4 !important;
+  --color-border-default-selected: #6272A4 !important;
+  --color-border-default-disabled: #31333F !important;
+  --color-border-default-readonly: #31333F !important;
+  --color-border-default-inverse-base: #44475A !important;
+  --color-border-default-inverse-focused: #44475A !important;
+  --color-border-default-inverse-hovered: #565973 !important;
+  --color-border-default-inverse-pressed: #6272A4 !important;
+  --color-border-default-inverse-selected: #6272A4 !important;
+  --color-border-default-inverse-disabled: #31333F !important;
+  --color-border-default-inverse-readonly: #31333F !important;
+  --color-border-tertiary-base: transparent !important;
+  --color-border-tertiary-focused: transparent !important;
+  --color-border-tertiary-hovered: #44475A !important;
+  --color-border-tertiary-pressed: #565973 !important;
+  --color-border-tertiary-selected: transparent !important;
+  --color-border-tertiary-disabled: transparent !important;
+  --color-border-tertiary-readonly: transparent !important;
+  --color-border-tertiary-inverse-base: transparent !important;
+  --color-border-tertiary-inverse-focused: transparent !important;
+  --color-border-tertiary-inverse-hovered: #44475A !important;
+  --color-border-tertiary-inverse-pressed: #565973 !important;
+  --color-border-tertiary-inverse-selected: transparent !important;
+  --color-border-tertiary-inverse-disabled: transparent !important;
+  --color-border-tertiary-inverse-readonly: transparent !important;
+  --color-border-subtle-base: #383A4A !important;
+  --color-border-subtle-focused: #383A4A !important;
+  --color-border-subtle-hovered: #383A4A !important;
+  --color-border-subtle-pressed: #383A4A !important;
+  --color-border-subtle-selected: #383A4A !important;
+  --color-border-subtle-disabled: #383A4A !important;
+  --color-border-subtle-readonly: #383A4A !important;
+  --color-border-emphasis-base: #6272A4 !important;
+  --color-border-emphasis-focused: #6272A4 !important;
+  --color-border-emphasis-hovered: #6272A4 !important;
+  --color-border-emphasis-pressed: #6272A4 !important;
+  --color-border-emphasis-selected: #6272A4 !important;
+  --color-border-emphasis-disabled: #6272A4 !important;
+  --color-border-emphasis-readonly: #6272A4 !important;
+  --color-border-emphasis-inverse-base: #6272A4 !important;
+  --color-border-emphasis-inverse-focused: #6272A4 !important;
+  --color-border-emphasis-inverse-hovered: #6272A4 !important;
+  --color-border-emphasis-inverse-pressed: #6272A4 !important;
+  --color-border-emphasis-inverse-selected: #6272A4 !important;
+  --color-border-emphasis-inverse-disabled: #6272A4 !important;
+  --color-border-emphasis-inverse-readonly: #6272A4 !important;
+  --color-border-input-base: #44475A !important;
+  --color-border-input-focused: #BD93F9 !important;
+  --color-border-input-hovered: #565973 !important;
+  --color-border-input-pressed: #BD93F9 !important;
+  --color-border-input-selected: #BD93F9 !important;
+  --color-border-input-disabled: #31333F !important;
+  --color-border-input-readonly: #31333F !important;
+  --color-border-input-inverse-base: #44475A !important;
+  --color-border-input-inverse-focused: #BD93F9 !important;
+  --color-border-input-inverse-hovered: #565973 !important;
+  --color-border-input-inverse-pressed: #BD93F9 !important;
+  --color-border-input-inverse-selected: #BD93F9 !important;
+  --color-border-input-inverse-disabled: #31333F !important;
+  --color-border-input-inverse-readonly: #31333F !important;
+  --color-outline-input-focused: #BD93F9 !important;
+  --color-outline-card-inverse-focused: rgba(248,248,242,0.80) !important;
+  --color-outline-negative-focused: #FF5555 !important;
+  --color-outline-caution-focused: #F1FA8C !important;
+
+  /* --- typography --- */
+  --color-typography-primary-base: #F8F8F2 !important;
+  --color-typography-primary-inverse: #F8F8F2 !important;
+  --color-typography-secondary-base: #D6D7E0 !important;
+  --color-typography-secondary-inverse: #D6D7E0 !important;
+  --color-typography-tertiary-base: #9AA0C3 !important;
+  --color-typography-tertiary-inverse: #9AA0C3 !important;
+  --color-typography-placeholder-base: #8692B7 !important;
+  --color-typography-placeholder-inverse: #9AA0C3 !important;
+  --color-typography-disabled-base: #6272A4 !important;
+  --color-typography-disabled-inverse: #9AA0C3 !important;
+  --color-typography-readonly-base: #D6D7E0 !important;
+  --color-typography-readonly-inverse: #D6D7E0 !important;
+  --color-typography-link-base-base: #8BE9FD !important;
+  --color-typography-link-base-inverse: #97EBFD !important;
+  --color-typography-link-active-base: #8BE9FD !important;
+  --color-typography-link-active-inverse: #97EBFD !important;
+  --color-typography-link-visited-base: #A2C2FB !important;
+  --color-typography-link-visited-inverse: #ABC8FB !important;
+  --color-typography-link-hovered-base: #A0EDFD !important;
+  --color-typography-link-hovered-inverse: #97EBFD !important;
+  --color-typography-link-disabled-base: #6272A4 !important;
+  --color-typography-link-disabled-inverse: #9AA0C3 !important;
+  --color-typography-highlighted-primary-subtle-base: #C6A2FA !important;
+  --color-typography-highlighted-primary-subtle-focused: #D1B3FB !important;
+  --color-typography-highlighted-primary-subtle-hovered: #D1B3FB !important;
+  --color-typography-highlighted-primary-subtle-pressed: #D1B3FB !important;
+  --color-typography-highlighted-primary-subtle-selected: #D1B3FB !important;
+  --color-typography-highlighted-primary-subtle-disabled: #6272A4 !important;
+  --color-typography-highlighted-primary-subtle-readonly: #C6A2FA !important;
+  --color-typography-highlighted-primary-emphasis-base: #21222C !important;
+  --color-typography-highlighted-primary-emphasis-focused: #21222C !important;
+  --color-typography-highlighted-primary-emphasis-hovered: #21222C !important;
+  --color-typography-highlighted-primary-emphasis-pressed: #21222C !important;
+  --color-typography-highlighted-primary-emphasis-selected: #21222C !important;
+  --color-typography-highlighted-primary-emphasis-disabled: #6272A4 !important;
+  --color-typography-highlighted-primary-emphasis-readonly: #21222C !important;
+  --color-typography-highlighted-secondary-subtle-base: #BD93F9 !important;
+  --color-typography-highlighted-secondary-subtle-focused: #C8A4FA !important;
+  --color-typography-highlighted-secondary-subtle-hovered: #C8A4FA !important;
+  --color-typography-highlighted-secondary-subtle-pressed: #C8A4FA !important;
+  --color-typography-highlighted-secondary-subtle-selected: #C8A4FA !important;
+  --color-typography-highlighted-secondary-subtle-disabled: #6272A4 !important;
+  --color-typography-highlighted-secondary-subtle-readonly: #BD93F9 !important;
+  --color-typography-highlighted-secondary-emphasis-base: #21222C !important;
+  --color-typography-highlighted-secondary-emphasis-focused: #21222C !important;
+  --color-typography-highlighted-secondary-emphasis-hovered: #21222C !important;
+  --color-typography-highlighted-secondary-emphasis-pressed: #21222C !important;
+  --color-typography-highlighted-secondary-emphasis-selected: #21222C !important;
+  --color-typography-highlighted-secondary-emphasis-disabled: #6272A4 !important;
+  --color-typography-highlighted-secondary-emphasis-readonly: #21222C !important;
+
+  /* --- third-party notification widget --- */
+  --color-thirdparty-notification-background-base: #282A36 !important;
+  --color-thirdparty-notification-background-secondary: #21222C !important;
+  --color-thirdparty-notification-background-emphasis: #31333F !important;
+  --color-thirdparty-notification-text-base: #F8F8F2 !important;
+  --color-thirdparty-notification-text-subtle: #D6D7E0 !important;
+
+  /* --- data visualisation --- */
+  --color-data-categorical-10: #BD93F9 !important;
+  --color-data-categorical-20: #8BE9FD !important;
+  --color-data-categorical-30: #FF79C6 !important;
+  --color-data-categorical-40: #50FA7B !important;
+  --color-data-categorical-50: #FFB86C !important;
+  --color-data-categorical-60: #F1FA8C !important;
+  --color-data-categorical-70: #FF5555 !important;
+  --color-data-white: #282A36 !important;
+  --color-data-single-base: #BD93F9 !important;
+  --color-data-line-marker: #6272A4 !important;
+  --color-data-line-ticks: #565973 !important;
+  --color-data-line-grid: #363848 !important;
+  --color-data-border-primary-selected: #BD93F9 !important;
+  --color-data-border-primary-focus: #BD93F9 !important;
+  --color-data-border-primary-hover: #565973 !important;
+  --color-data-deemphasized-200: #454751 !important;
+  --color-data-deemphasized-300: #55565F !important;
+  --color-data-deemphasized-400: #65666E !important;
+  --color-data-deemphasized-500: #797A7F !important;
+  --color-data-deemphasized-600: #919295 !important;
+  --color-data-deemphasized-700: #A8A9AA !important;
+  --color-data-deemphasized-800: #BCBDBC !important;
+  --color-data-deemphasized-900: #D0D1CE !important;
+  --color-data-deemphasized-1100: #E8E8E4 !important;
+  --color-data-deemphasized-1250: #F8F8F2 !important;
+  --color-data-sentiment-neutral-100: #33384E !important;
+  --color-data-sentiment-neutral-200: #394059 !important;
+  --color-data-sentiment-neutral-250: #404765 !important;
+  --color-data-sentiment-neutral-300: #464F70 !important;
+  --color-data-sentiment-neutral-350: #4C577C !important;
+  --color-data-sentiment-neutral-400: #525F87 !important;
+  --color-data-sentiment-neutral-450: #596693 !important;
+  --color-data-sentiment-neutral-500: #5F6E9E !important;
+  --color-data-sentiment-neutral-600: #6675A6 !important;
+  --color-data-sentiment-neutral-700: #6D7CAA !important;
+  --color-data-sentiment-neutral-800: #7482AF !important;
+  --color-data-sentiment-neutral-900: #7C89B3 !important;
+  --color-data-sentiment-neutral-1000: #8390B7 !important;
+  --color-data-sentiment-neutral-1100: #8A96BB !important;
+  --color-data-sentiment-neutral-1200: #929DC0 !important;
+  --color-data-sentiment-neutral-1250: #99A3C4 !important;
+  --color-data-sentiment-negative-100: #5F3037 !important;
+  --color-data-sentiment-negative-200: #74353B !important;
+  --color-data-sentiment-negative-250: #8A3A3F !important;
+  --color-data-sentiment-negative-300: #9F3F43 !important;
+  --color-data-sentiment-negative-350: #B44447 !important;
+  --color-data-sentiment-negative-400: #CA494B !important;
+  --color-data-sentiment-negative-450: #DF4E4F !important;
+  --color-data-sentiment-negative-500: #F45353 !important;
+  --color-data-sentiment-negative-600: #FF5959 !important;
+  --color-data-sentiment-negative-700: #FF6161 !important;
+  --color-data-sentiment-negative-800: #FF6969 !important;
+  --color-data-sentiment-negative-900: #FF7171 !important;
+  --color-data-sentiment-negative-1000: #FF7979 !important;
+  --color-data-sentiment-negative-1100: #FF8181 !important;
+  --color-data-sentiment-negative-1200: #FF8989 !important;
+  --color-data-sentiment-negative-1250: #FF9090 !important;
+  --color-data-sentiment-attention-100: #5F4C3E !important;
+  --color-data-sentiment-attention-200: #745A44 !important;
+  --color-data-sentiment-attention-250: #8A694A !important;
+  --color-data-sentiment-attention-300: #9F7750 !important;
+  --color-data-sentiment-attention-350: #B48657 !important;
+  --color-data-sentiment-attention-400: #CA945D !important;
+  --color-data-sentiment-attention-450: #DFA263 !important;
+  --color-data-sentiment-attention-500: #F4B169 !important;
+  --color-data-sentiment-attention-600: #FFBA6F !important;
+  --color-data-sentiment-attention-700: #FFBD76 !important;
+  --color-data-sentiment-attention-800: #FFC07D !important;
+  --color-data-sentiment-attention-900: #FFC484 !important;
+  --color-data-sentiment-attention-1000: #FFC78B !important;
+  --color-data-sentiment-attention-1100: #FFCA92 !important;
+  --color-data-sentiment-attention-1200: #FFCE99 !important;
+  --color-data-sentiment-attention-1250: #FFD19F !important;
+  --color-data-sentiment-caution-100: #5B5E47 !important;
+  --color-data-sentiment-caution-200: #6F7350 !important;
+  --color-data-sentiment-caution-250: #838859 !important;
+  --color-data-sentiment-caution-300: #979C63 !important;
+  --color-data-sentiment-caution-350: #ABB16C !important;
+  --color-data-sentiment-caution-400: #BFC675 !important;
+  --color-data-sentiment-caution-450: #D3DB7E !important;
+  --color-data-sentiment-caution-500: #E7F087 !important;
+  --color-data-sentiment-caution-600: #F1FA8F !important;
+  --color-data-sentiment-caution-700: #F2FA94 !important;
+  --color-data-sentiment-caution-800: #F3FB99 !important;
+  --color-data-sentiment-caution-900: #F3FB9F !important;
+  --color-data-sentiment-caution-1000: #F4FBA4 !important;
+  --color-data-sentiment-caution-1100: #F5FBAA !important;
+  --color-data-sentiment-caution-1200: #F5FCAF !important;
+  --color-data-sentiment-caution-1250: #F6FCB4 !important;
+  --color-data-sentiment-positive-100: #2E5E42 !important;
+  --color-data-sentiment-positive-200: #33734A !important;
+  --color-data-sentiment-positive-250: #378851 !important;
+  --color-data-sentiment-positive-300: #3C9C59 !important;
+  --color-data-sentiment-positive-350: #40B160 !important;
+  --color-data-sentiment-positive-400: #45C668 !important;
+  --color-data-sentiment-positive-450: #49DB70 !important;
+  --color-data-sentiment-positive-500: #4EF077 !important;
+  --color-data-sentiment-positive-600: #54FA7E !important;
+  --color-data-sentiment-positive-700: #5CFA84 !important;
+  --color-data-sentiment-positive-800: #64FB8A !important;
+  --color-data-sentiment-positive-900: #6DFB91 !important;
+  --color-data-sentiment-positive-1000: #75FB97 !important;
+  --color-data-sentiment-positive-1100: #7DFB9D !important;
+  --color-data-sentiment-positive-1200: #85FCA3 !important;
+  --color-data-sentiment-positive-1250: #8DFCA9 !important;
+  --color-data-sentiment-info-100: #3F5A67 !important;
+  --color-data-sentiment-info-200: #496D7B !important;
+  --color-data-sentiment-info-250: #53808F !important;
+  --color-data-sentiment-info-300: #5D93A3 !important;
+  --color-data-sentiment-info-350: #68A6B7 !important;
+  --color-data-sentiment-info-400: #72B9CB !important;
+  --color-data-sentiment-info-450: #7CCCDF !important;
+  --color-data-sentiment-info-500: #86DFF3 !important;
+  --color-data-sentiment-info-600: #8EEAFD !important;
+  --color-data-sentiment-info-700: #93EBFD !important;
+  --color-data-sentiment-info-800: #99ECFD !important;
+  --color-data-sentiment-info-900: #9EEDFD !important;
+  --color-data-sentiment-info-1000: #A3EEFD !important;
+  --color-data-sentiment-info-1100: #A9EFFE !important;
+  --color-data-sentiment-info-1200: #AEF0FE !important;
+  --color-data-sentiment-info-1250: #B4F1FE !important;
+  --color-data-sentiment-intelligence-100: #4D4265 !important;
+  --color-data-sentiment-intelligence-200: #5C4D79 !important;
+  --color-data-sentiment-intelligence-250: #6B588C !important;
+  --color-data-sentiment-intelligence-300: #7A62A0 !important;
+  --color-data-sentiment-intelligence-350: #896DB4 !important;
+  --color-data-sentiment-intelligence-400: #9878C8 !important;
+  --color-data-sentiment-intelligence-450: #A783DB !important;
+  --color-data-sentiment-intelligence-500: #B68EEF !important;
+  --color-data-sentiment-intelligence-600: #BF96F9 !important;
+  --color-data-sentiment-intelligence-700: #C29BF9 !important;
+  --color-data-sentiment-intelligence-800: #C5A0FA !important;
+  --color-data-sentiment-intelligence-900: #C8A5FA !important;
+  --color-data-sentiment-intelligence-1000: #CBAAFA !important;
+  --color-data-sentiment-intelligence-1100: #CEAFFB !important;
+  --color-data-sentiment-intelligence-1200: #D1B4FB !important;
+  --color-data-sentiment-intelligence-1250: #D4B9FB !important;
+  --color-data-sentiment-highlighted-100: #4D4265 !important;
+  --color-data-sentiment-highlighted-200: #5C4D79 !important;
+  --color-data-sentiment-highlighted-250: #6B588C !important;
+  --color-data-sentiment-highlighted-300: #7A62A0 !important;
+  --color-data-sentiment-highlighted-350: #896DB4 !important;
+  --color-data-sentiment-highlighted-400: #9878C8 !important;
+  --color-data-sentiment-highlighted-450: #A783DB !important;
+  --color-data-sentiment-highlighted-500: #B68EEF !important;
+  --color-data-sentiment-highlighted-600: #BF96F9 !important;
+  --color-data-sentiment-highlighted-700: #C29BF9 !important;
+  --color-data-sentiment-highlighted-800: #C5A0FA !important;
+  --color-data-sentiment-highlighted-900: #C8A5FA !important;
+  --color-data-sentiment-highlighted-1000: #CBAAFA !important;
+  --color-data-sentiment-highlighted-1100: #CEAFFB !important;
+  --color-data-sentiment-highlighted-1200: #D1B4FB !important;
+  --color-data-sentiment-highlighted-1250: #D4B9FB !important;
+
+  /* --- elevation --- */
+  --elevation-shadow-100: rgba(0,0,0,.40) 0 0 0 1px, rgba(0,0,0,.36) 0 1px 4px !important;
+  --elevation-kai-shadow-100: rgba(189,147,249,.40) 0 0 0 1px, rgba(189,147,249,.36) 0 1px 4px !important;
+  --elevation-shadow-200: rgba(0,0,0,.34) 0 2px 8px, rgba(0,0,0,.30) 0 1px 2px !important;
+  --elevation-kai-shadow-200: rgba(189,147,249,.34) 0 2px 8px, rgba(189,147,249,.30) 0 1px 2px !important;
+  --elevation-shadow-300: rgba(0,0,0,.34) 0 0 0 1px, rgba(0,0,0,.30) 0 4px 4px, rgba(0,0,0,.34) 0 8px 24px !important;
+  --elevation-kai-shadow-300: rgba(189,147,249,.34) 0 0 0 1px, rgba(189,147,249,.30) 0 4px 4px, rgba(189,147,249,.34) 0 8px 24px !important;
+  --elevation-shadow-400: rgba(0,0,0,.44) 0 0 0 1px, rgba(0,0,0,.40) 0 8px 16px !important;
+  --elevation-kai-shadow-400: rgba(189,147,249,.44) 0 0 0 1px, rgba(189,147,249,.40) 0 8px 16px !important;
+  --elevation-shadow-500: rgba(0,0,0,.48) 0 8px 16px !important;
+  --elevation-kai-shadow-500: rgba(189,147,249,.48) 0 8px 16px !important;
+  --elevation-shadow-600: rgba(0,0,0,.34) 0 0 0 2px, rgba(0,0,0,.40) 0 8px 20px, rgba(0,0,0,.40) 0 16px 32px !important;
+  --elevation-kai-shadow-600: rgba(189,147,249,.34) 0 0 0 2px, rgba(189,147,249,.40) 0 8px 20px, rgba(189,147,249,.40) 0 16px 32px !important;
+  --elevation-shadow-700: rgba(0,0,0,.34) 0 0 0 2px, rgba(0,0,0,.44) 0 12px 24px, rgba(0,0,0,.46) 0 20px 48px !important;
+  --elevation-kai-shadow-700: rgba(189,147,249,.34) 0 0 0 2px, rgba(189,147,249,.44) 0 12px 24px, rgba(189,147,249,.46) 0 20px 48px !important;
+  --elevation-shadow-800: rgba(0,0,0,.50) 0 4px 16px, rgba(0,0,0,.54) 0 24px 56px !important;
+  --elevation-kai-shadow-800: rgba(189,147,249,.50) 0 4px 16px, rgba(189,147,249,.54) 0 24px 56px !important;
+  --elevation-shadow-inset-100: inset rgba(0,0,0,.30) 0 1px 2px !important;
+  --elevation-kai-shadow-inset-100: inset rgba(189,147,249,.30) 0 1px 2px !important;
+  --elevation-shadow-inset-200: inset rgba(0,0,0,.34) 0 2px 4px !important;
+  --elevation-kai-shadow-inset-200: inset rgba(189,147,249,.34) 0 2px 4px !important;
+  --elevation-shadow-inset-300: inset rgba(0,0,0,.38) 0 2px 6px !important;
+  --elevation-kai-shadow-inset-300: inset rgba(189,147,249,.38) 0 2px 6px !important;
+  --elevation-shadow-inset-400: inset rgba(0,0,0,.42) 0 3px 8px !important;
+  --elevation-kai-shadow-inset-400: inset rgba(189,147,249,.42) 0 3px 8px !important;
+  --elevation-shadow-inset-500: inset rgba(0,0,0,.46) 0 4px 10px !important;
+  --elevation-kai-shadow-inset-500: inset rgba(189,147,249,.46) 0 4px 10px !important;
+  --elevation-shadow-inset-600: inset rgba(0,0,0,.50) 0 5px 12px !important;
+  --elevation-kai-shadow-inset-600: inset rgba(189,147,249,.50) 0 5px 12px !important;
+  --elevation-shadow-inset-700: inset rgba(0,0,0,.54) 0 6px 14px !important;
+  --elevation-kai-shadow-inset-700: inset rgba(189,147,249,.54) 0 6px 14px !important;
+  --elevation-shadow-inset-800: inset rgba(0,0,0,.58) 0 8px 18px !important;
+  --elevation-kai-shadow-inset-800: inset rgba(189,147,249,.58) 0 8px 18px !important;
+  --elevation-shadow-floating-100: rgba(0,0,0,.34) 0 0 0 1px, rgba(0,0,0,.30) 0 4px 6px, rgba(0,0,0,.34) 0 10px 18px, rgba(0,0,0,.40) 0 18px 56px !important;
+}
+
+/* === Structural touch-ups ===============================================
+   Every rule below is gated on #fender-root (the Klaviyo app shell root) so it
+   is impossible for these to apply inside an email document.
+   ======================================================================== */
+
+/* App ground */
+html:has(#fender-root),
+body:has(#fender-root) {
+  background: var(--drac-bg) !important;
+}
+
+/* The wordmark is a solid SVG that must track the foreground colour */
+#fender-root [class*="Logo-module__base"],
+#fender-root [class*="Logo-module__base"] path,
+#fender-root [class*="Logo-module__base"] * {
+  fill: var(--drac-fg) !important;
+  color: var(--drac-fg) !important;
+}
+
+/* Tooltips share --color-background-primary-base with the primary button.
+   Stock Klaviyo paints both near-black, which suits both; we want a purple
+   CTA, which would drag tooltips purple too. Give tooltips their own surface. */
+#fender-root [class*="Tooltip-module__tooltip"],
+#fender-root [class*="Tooltip-tooltip"],
+#fender-root [class*="Tooltip-module__arrow"],
+#fender-root [class*="Tooltip-arrow"] {
+  background-color: var(--drac-tooltip) !important;
+}
+
+/* The account popover header hardcodes a near-white in a styled-component whose
+   class hash changes every build. Anchor on the Avatar module class instead. */
+#fender-root [class*="InternalPopover-content"] div:has(> [class*="Avatar-module__jumbo"]) {
+  background-color: var(--drac-surface-2) !important;
+}
+
+/* The template Styles panel renders a live type sample ("Body") using the
+   template's OWN text colour as an inline style -- typically near-black, which
+   disappears against the dark panel. This is the one inline-coloured span in
+   the whole app chrome, so it can be targeted precisely.
+
+   Note the trade-off: forcing it to the foreground means the sample no longer
+   previews its colour. That is acceptable here because the exact value is shown
+   verbatim in the colour swatch two rows below it, so no information is lost --
+   and an unreadable sample previews nothing at all. */
+#fender-root [data-asc="Box"] > span[style*="color"] {
+  color: var(--drac-fg) !important;
+}
+
+/* The campaign wizard's preview toolbar (device toggle + Edit) hardcodes white
+   in a styled-component whose class hash changes every build. Anchor on the
+   stable `data-testid` wrapper plus the ControlGroup it contains, rather than
+   the hash. */
+#fender-root [data-testid="email-template-preview-wrapper"] div:has(> div > [class*="ControlGroup-module__base"]) {
+  background-color: var(--drac-surface) !important;
+}
+
+/* The flow builder canvas is React Flow, which ships its own stylesheet with
+   hardcoded light colours that never touch Klaviyo's tokens. Library classes,
+   so these names are stable. */
+#fender-root .react-flow__minimap {
+  background-color: var(--drac-surface) !important;
+}
+#fender-root .react-flow__minimap-mask {
+  fill: rgba(25,26,33,0.60) !important;
+}
+#fender-root .react-flow__minimap-node {
+  fill: var(--drac-line-2) !important;
+  stroke: none !important;
+}
+#fender-root .react-flow__controls-button {
+  background-color: var(--drac-surface-2) !important;
+  border-bottom-color: var(--drac-line) !important;
+  fill: var(--drac-fg) !important;
+}
+#fender-root .react-flow__attribution { background: transparent !important; }
+#fender-root .react-flow__attribution a { color: var(--drac-fg-3) !important; }
+
+/* Text selection */
+#fender-root ::selection {
+  background: rgba(189,147,249,.40);
+  color: var(--drac-fg);
+}
+
+/* Scrollbars */
+#fender-root *,
+body:has(#fender-root) {
+  scrollbar-color: var(--drac-line) transparent;
+}
+body:has(#fender-root) ::-webkit-scrollbar { width: 12px; height: 12px; }
+body:has(#fender-root) ::-webkit-scrollbar-track { background: var(--drac-bg); }
+body:has(#fender-root) ::-webkit-scrollbar-thumb {
+  background: var(--drac-line);
+  border: 3px solid var(--drac-bg);
+  border-radius: 8px;
+}
+body:has(#fender-root) ::-webkit-scrollbar-thumb:hover { background: var(--drac-comment); }
+
+  :root[lang] { --drac-tooltip: #44475A; }
+
+/* Marketing illustrations and empty-state art are drawn for a white page.
+   Knock back their glare without distorting hue. */
+#fender-root img[src*="empty"],
+#fender-root img[src*="illustration"],
+#fender-root img[src*="placeholder"] {
+  filter: brightness(.88) contrast(1.04);
+}
+
+/* Klaviyo occasionally paints a literal white behind embedded third-party
+   widgets; neutralise the most common ones. */
+#fender-root [style*="background-color: rgb(255, 255, 255)"],
+#fender-root [style*="background: rgb(255, 255, 255)"],
+#fender-root [style*="background-color:#fff"],
+#fender-root [style*="background-color: #fff"] {
+  background-color: var(--drac-surface) !important;
+}
+
+/* --- ACE CODE EDITOR -------------------------------------------------------
+   Klaviyo embeds the Ace editor (block > Display > Use code, and the custom
+   HTML/template editors) with Ace's stock `ace-tm` TextMate theme, which is
+   hardcoded light and never touches Klaviyo's tokens -- so a white slab in an
+   otherwise dark modal.
+
+   Dracula began life as a syntax theme, so rather than just darkening the box
+   this maps Ace's token scopes onto the real palette. Ace's class names come
+   from the library, so they are stable across Klaviyo builds. */
+#fender-root .ace_editor {
+  background-color: var(--drac-surface) !important;
+  color: var(--drac-fg) !important;
+}
+#fender-root .ace_gutter {
+  background: var(--drac-bg) !important;
+  color: var(--drac-comment) !important;
+  border-right: 1px solid var(--drac-line) !important;
+}
+#fender-root .ace_gutter-active-line {
+  background-color: var(--drac-line) !important;
+  color: var(--drac-fg) !important;
+}
+#fender-root .ace_scroller { background-color: var(--drac-surface) !important; }
+#fender-root .ace_content  { background-color: transparent !important; }
+#fender-root .ace_cursor {
+  color: var(--drac-fg) !important;
+  border-left-color: var(--drac-fg) !important;
+}
+#fender-root .ace_marker-layer .ace_selection    { background: var(--drac-line) !important; }
+#fender-root .ace_marker-layer .ace_active-line  { background: rgba(68,71,90,0.45) !important; }
+#fender-root .ace_marker-layer .ace_selected-word{
+  background: var(--drac-line) !important;
+  border: 1px solid var(--drac-comment) !important;
+}
+#fender-root .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px !important;
+  border: 1px solid var(--drac-comment) !important;
+}
+#fender-root .ace_print-margin { background: var(--drac-line) !important; width: 1px !important; }
+#fender-root .ace_indent-guide {
+  background: none !important;
+  border-right: 1px solid rgba(98,114,164,0.35) !important;
+}
+#fender-root .ace_placeholder { color: var(--drac-comment) !important; }
+#fender-root .ace_fold {
+  background-color: var(--drac-purple) !important;
+  border-color: var(--drac-fg) !important;
+}
+
+/* Ace token scopes -> Dracula */
+#fender-root .ace_comment { color: var(--drac-comment) !important; font-style: italic !important; }
+#fender-root .ace_keyword,
+#fender-root .ace_meta,
+#fender-root .ace_storage,
+#fender-root .ace_operator,
+#fender-root .ace_keyword.ace_operator { color: var(--drac-pink) !important; }
+#fender-root .ace_string,
+#fender-root .ace_string.ace_regexp { color: var(--drac-yellow) !important; }
+#fender-root .ace_constant,
+#fender-root .ace_constant.ace_numeric,
+#fender-root .ace_constant.ace_language,
+#fender-root .ace_constant.ace_character { color: var(--drac-purple) !important; }
+#fender-root .ace_entity.ace_name.ace_function,
+#fender-root .ace_support.ace_function,
+#fender-root .ace_variable.ace_function { color: var(--drac-green) !important; }
+#fender-root .ace_variable,
+#fender-root .ace_variable.ace_parameter {
+  color: var(--drac-orange) !important; font-style: italic !important;
+}
+#fender-root .ace_entity.ace_name.ace_tag,
+#fender-root .ace_meta.ace_tag { color: var(--drac-pink) !important; }
+#fender-root .ace_entity.ace_other.ace_attribute-name { color: var(--drac-green) !important; }
+#fender-root .ace_support.ace_type,
+#fender-root .ace_support.ace_class,
+#fender-root .ace_entity.ace_name.ace_class {
+  color: var(--drac-cyan) !important; font-style: italic !important;
+}
+#fender-root .ace_invalid {
+  background-color: var(--drac-red) !important; color: var(--drac-fg) !important;
+}
+#fender-root .ace_paren,
+#fender-root .ace_punctuation { color: var(--drac-fg) !important; }
+
+
+/* --- EMAIL CANVAS: KEEP IT TRUE ---------------------------------------------
+   This is load-bearing, not decoration.
+
+   Klaviyo renders the email preview and the drag-and-drop editor into `srcdoc`
+   iframes whose html, body and wrapper are ALL fully transparent -- stock
+   Klaviyo just paints its own canvas behind them. If the canvas changes colour,
+   a transparent email inherits it, and every design that relies on an implicit
+   white ground (transparent PNGs, unfilled padding, light-on-light text) reads
+   wrong. So we give the iframe back the exact canvas colour stock Klaviyo uses
+   and pin `color-scheme: light`, which stops the inner document from picking up
+   dark form controls. Everything inside the frame then renders precisely as it
+   does un-themed. */
+#fender-root iframe {
+  color-scheme: light;
+  background: #F3F6F7;
+}
+
+} /* @-moz-document */

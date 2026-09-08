@@ -1,0 +1,180 @@
+/* ==UserStyle==
+@name           Gmail — Dracula
+@namespace      rdj.xyz
+@version        1.3.0
+@description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
+@author         rdj
+@preprocessor   default
+==/UserStyle== */
+
+@-moz-document domain("mail.google.com") {
+
+:root {
+  --d-bg:        #282a36;
+  --d-bg-dark:   #21222c;
+  --d-bg-light:  #343746;
+  --d-line:      #44475a;
+  --d-sel-nav:   #332a4d;
+  --d-fg:        #f8f8f2;
+  --d-fg-dim:    #b7bcd4;
+  --d-fg-mute:   #8f97bd;
+  --d-fg-faint:  #848db3;
+  --d-meta:      #a2abcd;
+  --d-cyan:      #8be9fd;
+  --d-green:     #50fa7b;
+  --d-pink:      #ff79c6;
+  --d-purple:    #bd93f9;
+}
+
+/* ---------- app shell ---------- */
+body.aAU, div.vI8oZc.yL > div.wl, div.wl { background: var(--d-bg-dark) !important; }
+div.nH.bkK > div.nH             { background: var(--d-bg) !important; }
+div.nH.bkK                      { background: transparent !important; }
+
+/* ---------- top bar + search ---------- */
+header.gb_Ra, div.gb_ge         { background: var(--d-bg-dark) !important; }
+form.gb_Pd                      { background: var(--d-line) !important; }
+form.gb_Pd:focus-within         { background: var(--d-bg-light) !important;
+                                  box-shadow: 0 0 0 1px var(--d-purple) !important; }
+form.gb_Pd input                { color: var(--d-fg) !important; }
+form.gb_Pd input::placeholder   { color: var(--d-meta) !important; }
+
+/* ---------- left nav ---------- */
+div.aeN, div.aeN .aim, div.aeN .wT { background: var(--d-bg-dark) !important; }
+div.aic                         { background: transparent !important; }
+.TO .nU, .TO .nU a, .aim .n0    { color: var(--d-fg-dim) !important; }
+.TO:hover                       { background: var(--d-line) !important; }
+.TO:hover .nU, .TO:hover .n0    { color: var(--d-fg) !important; }
+/* selected pill: purple-tinted dark ground so purple label keeps 5.5:1 */
+.TO.nZ, .TO.aiq, .TO.n1         { background: var(--d-sel-nav) !important; }
+.TO.nZ .nU, .TO.nZ .nU a,
+.TO.nZ .n0                      { color: var(--d-purple) !important; font-weight: 700 !important; }
+.bsU, .n0 .bsU                  { color: var(--d-green) !important; }
+
+/* Compose — Gmail draws a dark icon/label here, so a purple fill reads correctly */
+.T-I.T-I-KE.L3                  { background: var(--d-purple) !important;
+                                  box-shadow: 0 1px 4px rgba(0,0,0,.45) !important; }
+.T-I.T-I-KE.L3:hover            { background: var(--d-pink) !important; }
+
+/* ---------- toolbar ---------- */
+.G-atb, .ar9, .aqL, .D.E, .nH.aqK { background: transparent !important; }
+.G-atb                          { border-bottom: 1px solid var(--d-line) !important; }
+
+/* ---------- thread list ---------- */
+table.F.cf.zt                   { background: transparent !important; }
+tr.zA                           { border-bottom: 1px solid rgba(68,71,90,.45) !important; }
+
+/* read */
+tr.zA.yO                        { background-color: var(--d-bg-dark) !important; }
+tr.zA.yO .yW span               { color: var(--d-fg-mute) !important; }   /* 5.51:1 */
+tr.zA.yO .bog span              { color: #aeb4cf !important; }            /* 7.69:1 */
+tr.zA.yO .y2                    { color: var(--d-fg-faint) !important; }  /* 4.84:1 */
+
+/* unread — sender stays white; the purple bar carries the signal */
+tr.zA.zE                        { background-color: var(--d-bg) !important;
+                                  box-shadow: inset 3px 0 0 var(--d-purple) !important; }
+tr.zA.zE .yW span, tr.zA.zE .yP { color: var(--d-fg) !important; }
+tr.zA.zE .bog span              { color: var(--d-fg) !important; }
+tr.zA.zE .y2                    { color: var(--d-fg-dim) !important; }
+
+/* date column */
+tr.zA .xW span                  { color: var(--d-fg-mute) !important; }
+tr.zA.zE .xW span               { color: var(--d-cyan) !important; }
+
+/* hover + selected — lift text so it stays >=4.5:1 on the lighter ground */
+tr.zA:hover                     { background-color: var(--d-line) !important;
+                                  box-shadow: inset 3px 0 0 var(--d-cyan) !important; }
+tr.zA.x7, tr.zA.x7:hover        { background-color: var(--d-bg-light) !important;
+                                  box-shadow: inset 3px 0 0 var(--d-pink) !important; }
+tr.zA:hover .y2, tr.zA.x7 .y2   { color: #c7cde0 !important; }
+tr.zA:hover .xW span,
+tr.zA.x7 .xW span               { color: #d5dae9 !important; }
+tr.zA:hover .bog span, tr.zA.x7 .bog span,
+tr.zA:hover .yW span, tr.zA.x7 .yW span { color: var(--d-fg) !important; }
+
+/* Label chips: recolor ONLY Gmail's default grey (#e1e3e1) chips.
+   Chips carrying a user-picked label colour are left untouched. */
+div.at[style*="e1e3e1"]         { background-color: var(--d-line) !important;
+                                  border-color: transparent !important; }
+div.at[style*="e1e3e1"] .au     { border-color: transparent !important; }
+div.at[style*="e1e3e1"] .av     { color: var(--d-fg) !important; }
+.hN[style*="e1e3e1"], .hO[style*="e1e3e1"] {
+                                  --cv-colored-label-bg-color: var(--d-line) !important;
+                                  --cv-colored-label-text-color: var(--d-fg) !important;
+                                  background-color: var(--d-line) !important;
+                                  color: var(--d-fg) !important; }
+.hN[style*="e1e3e1"] *, .hO[style*="e1e3e1"] * { color: var(--d-fg) !important; }
+
+/* ---------- open thread ----------
+   Gmail's Dark theme leaves the reading pane WHITE. Darken the pane itself,
+   then hand the message body back a light surface so sender HTML renders as
+   authored. Text colours INSIDE the body are left native on purpose — forcing
+   them breaks dark-designed emails. */
+.nH.a98.iY                      { background: var(--d-bg) !important; }
+.ii.gt                          { background: #ffffff !important; border-radius: 8px !important; }
+.gE.iv.gt, .adn.ads, .gs,
+.nH.if, .aia, .aeJ, .h7, .G3    { background: transparent !important; }
+.hP, .ha h2                     { color: var(--d-fg) !important; font-weight: 500 !important; }
+.gK .gD, .gK .go, .gD, .go      { color: var(--d-cyan) !important; }
+.g3, .g2, .adx,
+.gK span.g3, .gH .g3            { color: var(--d-meta) !important; }
+/* in-message action strip (Reply / Forward / emoji) — verified on div.nH.btDi4d */
+div.nH.btDi4d, div.amr, div.nr.wR { background: var(--d-bg) !important; }
+span.ams, span.ams.bkH,
+span.ams.bkG, span.ams.bkI      { color: var(--d-fg) !important;
+                                  border-color: var(--d-line) !important;
+                                  background: transparent !important; }
+span.ams:hover                  { background: var(--d-line) !important;
+                                  border-color: #6272a4 !important; }
+.amn, .amn *, .btm, .aDh        { color: var(--d-fg) !important; }
+.hb, .hb span, .g2 .hb          { color: var(--d-meta) !important; }
+.Ca, .Ca span, a.Ca             { color: var(--d-cyan) !important; }
+
+/* ---------- compose window ----------
+   Selectors verified against the live compose dialog (div[role=dialog].nH.Hd).
+   Body/subject colours are userstyle-only and are NOT serialised into sent mail. */
+.nH.Hy.aXJ > .nH > .l.m         { background: var(--d-bg-dark) !important; }
+.l.m, .l.m *                    { color: var(--d-fg) !important; }
+.aaZ, td.Ap, .aDj.ahe,
+.aoI, .GP, .btC, .aGb           { background: var(--d-bg) !important; }
+.aDh, .fX, .aoD, .wO            { background: transparent !important; }
+.aDj.ahe, .aDj.ahe *            { border-color: var(--d-line) !important; }
+input.agP, input.aoT, textarea.aoT,
+.aoD input, .vO                 { color: var(--d-fg) !important; background: transparent !important; }
+.aoD .vT, .az9 span, .afV,
+.agP::placeholder,
+.aoT::placeholder               { color: var(--d-meta) !important; }
+.gO.aQY, .aQY, .aB.gQ,
+.aB.gQ.pE, .aB.gQ.pB            { color: var(--d-meta) !important; }
+.aB.gQ.pE:hover,
+.aB.gQ.pB:hover                 { color: var(--d-cyan) !important; }
+.Am.Al.editable,
+.Am.aiL.Al.editable             { color: var(--d-fg) !important; background: transparent !important; }
+.J-Z, .aX.MNXB3e .aZ .J-Z,
+.n1tfz                          { background: var(--d-bg-dark) !important;
+                                  border-color: var(--d-line) !important; }
+.J-Z, .J-Z .J-J5-Ji, .J-Z *     { color: #d5dae9 !important; }
+.T-I.J-J5-Ji.aoO,
+.T-I.aoO.v7.T-I-atl             { background: var(--d-purple) !important;
+                                  color: var(--d-bg-dark) !important; font-weight: 600 !important; }
+.T-I.J-J5-Ji.aoO:hover          { background: var(--d-pink) !important; }
+
+/* ---------- menus + dialogs ---------- */
+.J-M, .b7.J-M                   { background: var(--d-bg-light) !important;
+                                  border: 1px solid var(--d-line) !important;
+                                  box-shadow: 0 8px 28px rgba(0,0,0,.55) !important; }
+.J-N                            { color: var(--d-fg) !important; }
+.J-N:hover, .J-N.J-N-JT         { background: var(--d-line) !important; }
+
+/* ---------- right side panel ---------- */
+.brC-brG, .bAw, .no             { background: var(--d-bg-dark) !important; }
+
+/* ---------- scrollbars ---------- */
+::-webkit-scrollbar             { width: 12px; height: 12px; }
+::-webkit-scrollbar-track       { background: var(--d-bg-dark); }
+::-webkit-scrollbar-thumb       { background: var(--d-line); border-radius: 8px;
+                                  border: 3px solid var(--d-bg-dark); }
+::-webkit-scrollbar-thumb:hover { background: #6272a4; }
+::-webkit-scrollbar-corner      { background: var(--d-bg-dark); }
+
+}

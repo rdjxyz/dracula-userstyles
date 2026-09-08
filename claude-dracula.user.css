@@ -1,0 +1,448 @@
+/* ==UserStyle==
+@name           Claude Dracula
+@namespace      rdj.xyz
+@version        1.7.0
+@description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
+@author         rdjxyz
+@license        MIT
+==/UserStyle== */
+
+/* Dracula spec: bg #282a36 · current line #44475a · fg #f8f8f2 · comment #6272a4
+   purple #bd93f9 · pink #ff79c6 · cyan #8be9fd · green #50fa7b · yellow #f1fa8c · orange #ffb86c · red #ff5555
+   Mapping: gray ramp -> navy/off-white · blue -> purple · violet/magenta -> pink · aqua -> cyan
+            red/green/yellow/orange -> their Dracula counterparts · clay (brand orange) -> purple
+   Generated from claude.ai's palette ladder; only applies in dark mode. */
+
+@-moz-document domain("claude.ai") {
+/* The artifact viewer shell (html[data-frame-uuid], see the block at the end) declares this ramp on
+   :root and leaves data-mode unset when the theme is "system", so it is matched by its own selectors. */
+:is(html, .cds-root)[data-mode="dark"],
+:is(html, .cds-root)[data-mode="dark"] .cds-root,
+html[data-frame-uuid]:not([data-mode="light"]),
+html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
+  --cds-gray-0: #ffffff !important;  --cds-hsl-gray-0: 0.0 0.0% 100.0% !important;
+  --cds-gray-10: #fdfdfb !important;  --cds-hsl-gray-10: 60.0 33.3% 98.8% !important;
+  --cds-gray-20: #fbfbf7 !important;  --cds-hsl-gray-20: 60.0 33.3% 97.6% !important;
+  --cds-gray-30: #f9f9f4 !important;  --cds-hsl-gray-30: 60.0 29.4% 96.7% !important;
+  --cds-gray-40: #f7f7f0 !important;  --cds-hsl-gray-40: 60.0 30.4% 95.5% !important;
+  --cds-gray-50: #f5f5ed !important;  --cds-hsl-gray-50: 60.0 28.6% 94.5% !important;
+  --cds-gray-60: #f3f3e9 !important;  --cds-hsl-gray-60: 60.0 29.4% 93.3% !important;
+  --cds-gray-70: #f1f1e5 !important;  --cds-hsl-gray-70: 60.0 30.0% 92.2% !important;
+  --cds-gray-80: #efefe2 !important;  --cds-hsl-gray-80: 60.0 28.9% 91.2% !important;
+  --cds-gray-90: #ededde !important;  --cds-hsl-gray-90: 60.0 29.4% 90.0% !important;
+  --cds-gray-100: #ebebda !important;  --cds-hsl-gray-100: 60.0 29.8% 88.8% !important;
+  --cds-gray-150: #e3e3cb !important;  --cds-hsl-gray-150: 60.0 30.0% 84.3% !important;
+  --cds-gray-200: #bec5da !important;  --cds-hsl-gray-200: 225.0 27.5% 80.0% !important;
+  --cds-gray-250: #aeb6d0 !important;  --cds-hsl-gray-250: 225.9 26.6% 74.9% !important;
+  --cds-gray-300: #9da7c7 !important;  --cds-hsl-gray-300: 225.7 27.3% 69.8% !important;
+  --cds-gray-350: #8e9abe !important;  --cds-hsl-gray-350: 225.0 27.0% 65.1% !important;
+  --cds-gray-400: #7f8db5 !important;  --cds-hsl-gray-400: 224.4 26.7% 60.4% !important;
+  --cds-gray-450: #707fad !important;  --cds-hsl-gray-450: 225.2 27.1% 55.9% !important;
+  --cds-gray-500: #6071a4 !important;  --cds-hsl-gray-500: 225.0 27.2% 51.0% !important;
+  --cds-gray-550: #586898 !important;  --cds-hsl-gray-550: 225.0 26.7% 47.1% !important;
+  --cds-gray-600: #5e637f !important;  --cds-hsl-gray-600: 230.9 14.9% 43.3% !important;
+  --cds-gray-650: #565b75 !important;  --cds-hsl-gray-650: 230.3 15.3% 39.8% !important;
+  --cds-gray-700: #4e5269 !important;  --cds-hsl-gray-700: 231.1 14.8% 35.9% !important;
+  --cds-gray-750: #43475b !important;  --cds-hsl-gray-750: 230.0 15.2% 31.0% !important;
+  --cds-gray-800: #343746 !important;  --cds-hsl-gray-800: 230.0 14.8% 23.9% !important;
+  --cds-gray-810: #313443 !important;  --cds-hsl-gray-810: 230.0 15.5% 22.7% !important;
+  --cds-gray-820: #2f3240 !important;  --cds-hsl-gray-820: 229.4 15.3% 21.8% !important;
+  --cds-gray-830: #2d2f3c !important;  --cds-hsl-gray-830: 232.0 14.3% 20.6% !important;
+  --cds-gray-840: #2a2c39 !important;  --cds-hsl-gray-840: 232.0 15.2% 19.4% !important;
+  --cds-gray-850: #272935 !important;  --cds-hsl-gray-850: 231.4 15.2% 18.0% !important;
+  --cds-gray-860: #252631 !important;  --cds-hsl-gray-860: 235.0 14.0% 16.9% !important;
+  --cds-gray-870: #22242e !important;  --cds-hsl-gray-870: 230.0 15.0% 15.7% !important;
+  --cds-gray-880: #1f212a !important;  --cds-hsl-gray-880: 229.1 15.1% 14.3% !important;
+  --cds-gray-890: #1d1e27 !important;  --cds-hsl-gray-890: 234.0 14.7% 13.3% !important;
+  --cds-gray-900: #1a1b23 !important;  --cds-hsl-gray-900: 233.3 14.8% 12.0% !important;
+  --cds-blue-0: #ffffff !important;  --cds-hsl-blue-0: 0.0 0.0% 100.0% !important;
+  --cds-blue-10: #fdfcfe !important;  --cds-hsl-blue-10: 270.0 50.0% 99.2% !important;
+  --cds-blue-20: #fbf9fd !important;  --cds-hsl-blue-20: 270.0 50.0% 98.4% !important;
+  --cds-blue-30: #f9f7fd !important;  --cds-hsl-blue-30: 260.0 60.0% 98.0% !important;
+  --cds-blue-40: #f7f4fc !important;  --cds-hsl-blue-40: 262.5 57.1% 97.3% !important;
+  --cds-blue-50: #f5f2fb !important;  --cds-hsl-blue-50: 260.0 52.9% 96.7% !important;
+  --cds-blue-60: #f4effa !important;  --cds-hsl-blue-60: 267.3 52.4% 95.9% !important;
+  --cds-blue-70: #f2ecf9 !important;  --cds-hsl-blue-70: 267.7 52.0% 95.1% !important;
+  --cds-blue-80: #f0eaf9 !important;  --cds-hsl-blue-80: 264.0 55.6% 94.7% !important;
+  --cds-blue-90: #eee7f8 !important;  --cds-hsl-blue-90: 264.7 54.8% 93.9% !important;
+  --cds-blue-100: #ece4f7 !important;  --cds-hsl-blue-100: 265.3 54.3% 93.1% !important;
+  --cds-blue-150: #e1cefc !important;  --cds-hsl-blue-150: 264.8 88.5% 89.8% !important;
+  --cds-blue-200: #d8bffb !important;  --cds-hsl-blue-200: 265.0 88.2% 86.7% !important;
+  --cds-blue-250: #cfb0fa !important;  --cds-hsl-blue-250: 265.1 88.1% 83.5% !important;
+  --cds-blue-300: #c7a2fa !important;  --cds-hsl-blue-300: 265.2 89.8% 80.8% !important;
+  --cds-blue-350: #bf95f9 !important;  --cds-hsl-blue-350: 265.2 89.3% 78.0% !important;
+  --cds-blue-400: #ab75f7 !important;  --cds-hsl-blue-400: 264.9 89.0% 71.4% !important;
+  --cds-blue-450: #9855f5 !important;  --cds-hsl-blue-450: 265.1 88.9% 64.7% !important;
+  --cds-blue-500: #8434f3 !important;  --cds-hsl-blue-500: 265.1 88.8% 57.8% !important;
+  --cds-blue-550: #7013f1 !important;  --cds-hsl-blue-550: 265.1 88.8% 51.0% !important;
+  --cds-blue-600: #610dd8 !important;  --cds-hsl-blue-600: 264.8 88.6% 44.9% !important;
+  --cds-blue-650: #540bb9 !important;  --cds-hsl-blue-650: 265.2 88.8% 38.4% !important;
+  --cds-blue-700: #45099a !important;  --cds-hsl-blue-700: 264.8 89.0% 32.0% !important;
+  --cds-blue-750: #39077e !important;  --cds-hsl-blue-750: 265.2 89.5% 26.1% !important;
+  --cds-blue-800: #2c0662 !important;  --cds-hsl-blue-800: 264.8 88.5% 20.4% !important;
+  --cds-blue-810: #2a055d !important;  --cds-hsl-blue-810: 265.2 89.8% 19.2% !important;
+  --cds-blue-820: #280558 !important;  --cds-hsl-blue-820: 265.3 89.2% 18.2% !important;
+  --cds-blue-830: #260553 !important;  --cds-hsl-blue-830: 265.4 88.6% 17.3% !important;
+  --cds-blue-840: #23054f !important;  --cds-hsl-blue-840: 264.3 88.1% 16.5% !important;
+  --cds-blue-850: #210449 !important;  --cds-hsl-blue-850: 265.2 89.6% 15.1% !important;
+  --cds-blue-860: #1f0444 !important;  --cds-hsl-blue-860: 265.3 88.9% 14.1% !important;
+  --cds-blue-870: #1c043f !important;  --cds-hsl-blue-870: 264.4 88.1% 13.1% !important;
+  --cds-blue-880: #1a033a !important;  --cds-hsl-blue-880: 265.1 90.2% 12.0% !important;
+  --cds-blue-890: #180335 !important;  --cds-hsl-blue-890: 265.2 89.3% 11.0% !important;
+  --cds-blue-900: #160330 !important;  --cds-hsl-blue-900: 265.3 88.2% 10.0% !important;
+  --cds-violet-0: #ffffff !important;  --cds-hsl-violet-0: 0.0 0.0% 100.0% !important;
+  --cds-violet-10: #fefcfd !important;  --cds-hsl-violet-10: 330.0 50.0% 99.2% !important;
+  --cds-violet-20: #fdf8fb !important;  --cds-hsl-violet-20: 324.0 55.6% 98.2% !important;
+  --cds-violet-30: #fdf5f9 !important;  --cds-hsl-violet-30: 330.0 66.7% 97.6% !important;
+  --cds-violet-40: #fcf2f7 !important;  --cds-hsl-violet-40: 330.0 62.5% 96.9% !important;
+  --cds-violet-50: #fbeef5 !important;  --cds-hsl-violet-50: 327.7 61.9% 95.9% !important;
+  --cds-violet-60: #faebf4 !important;  --cds-hsl-violet-60: 324.0 60.0% 95.1% !important;
+  --cds-violet-70: #f9e8f2 !important;  --cds-hsl-violet-70: 324.7 58.6% 94.3% !important;
+  --cds-violet-80: #f8e5f0 !important;  --cds-hsl-violet-80: 325.3 57.6% 93.5% !important;
+  --cds-violet-90: #f8e1ee !important;  --cds-hsl-violet-90: 326.1 62.2% 92.7% !important;
+  --cds-violet-100: #f7deec !important;  --cds-hsl-violet-100: 326.4 61.0% 92.0% !important;
+  --cds-violet-150: #ffc2e4 !important;  --cds-hsl-violet-150: 326.6 100.0% 88.0% !important;
+  --cds-violet-200: #ffafdc !important;  --cds-hsl-violet-200: 326.2 100.0% 84.3% !important;
+  --cds-violet-250: #ff9cd4 !important;  --cds-hsl-violet-250: 326.1 100.0% 80.6% !important;
+  --cds-violet-300: #ff8bcd !important;  --cds-hsl-violet-300: 325.9 100.0% 77.3% !important;
+  --cds-violet-350: #ff7ac6 !important;  --cds-hsl-violet-350: 325.7 100.0% 73.9% !important;
+  --cds-violet-400: #ff5bb8 !important;  --cds-hsl-violet-400: 326.0 100.0% 67.8% !important;
+  --cds-violet-450: #ff3aaa !important;  --cds-hsl-violet-450: 325.9 100.0% 61.4% !important;
+  --cds-violet-500: #ff1a9c !important;  --cds-hsl-violet-500: 325.9 100.0% 55.1% !important;
+  --cds-violet-550: #f8008d !important;  --cds-hsl-violet-550: 325.9 100.0% 48.6% !important;
+  --cds-violet-600: #da007b !important;  --cds-hsl-violet-600: 326.1 100.0% 42.7% !important;
+  --cds-violet-650: #bc006a !important;  --cds-hsl-violet-650: 326.2 100.0% 36.9% !important;
+  --cds-violet-700: #9c0059 !important;  --cds-hsl-violet-700: 325.8 100.0% 30.6% !important;
+  --cds-violet-750: #800049 !important;  --cds-hsl-violet-750: 325.8 100.0% 25.1% !important;
+  --cds-violet-800: #650039 !important;  --cds-hsl-violet-800: 326.1 100.0% 19.8% !important;
+  --cds-violet-810: #600036 !important;  --cds-hsl-violet-810: 326.2 100.0% 18.8% !important;
+  --cds-violet-820: #5b0034 !important;  --cds-hsl-violet-820: 325.7 100.0% 17.8% !important;
+  --cds-violet-830: #560031 !important;  --cds-hsl-violet-830: 325.8 100.0% 16.9% !important;
+  --cds-violet-840: #51002e !important;  --cds-hsl-violet-840: 325.9 100.0% 15.9% !important;
+  --cds-violet-850: #4b002b !important;  --cds-hsl-violet-850: 325.6 100.0% 14.7% !important;
+  --cds-violet-860: #460028 !important;  --cds-hsl-violet-860: 325.7 100.0% 13.7% !important;
+  --cds-violet-870: #420025 !important;  --cds-hsl-violet-870: 326.4 100.0% 12.9% !important;
+  --cds-violet-880: #3d0022 !important;  --cds-hsl-violet-880: 326.6 100.0% 12.0% !important;
+  --cds-violet-890: #380020 !important;  --cds-hsl-violet-890: 325.7 100.0% 11.0% !important;
+  --cds-violet-900: #33001d !important;  --cds-hsl-violet-900: 325.9 100.0% 10.0% !important;
+  --cds-magenta-0: #ffffff !important;  --cds-hsl-magenta-0: 0.0 0.0% 100.0% !important;
+  --cds-magenta-10: #fefcfd !important;  --cds-hsl-magenta-10: 330.0 50.0% 99.2% !important;
+  --cds-magenta-20: #fdf8fb !important;  --cds-hsl-magenta-20: 324.0 55.6% 98.2% !important;
+  --cds-magenta-30: #fdf5f9 !important;  --cds-hsl-magenta-30: 330.0 66.7% 97.6% !important;
+  --cds-magenta-40: #fcf2f7 !important;  --cds-hsl-magenta-40: 330.0 62.5% 96.9% !important;
+  --cds-magenta-50: #fbeef5 !important;  --cds-hsl-magenta-50: 327.7 61.9% 95.9% !important;
+  --cds-magenta-60: #faebf4 !important;  --cds-hsl-magenta-60: 324.0 60.0% 95.1% !important;
+  --cds-magenta-70: #f9e8f2 !important;  --cds-hsl-magenta-70: 324.7 58.6% 94.3% !important;
+  --cds-magenta-80: #f8e5f0 !important;  --cds-hsl-magenta-80: 325.3 57.6% 93.5% !important;
+  --cds-magenta-90: #f8e1ee !important;  --cds-hsl-magenta-90: 326.1 62.2% 92.7% !important;
+  --cds-magenta-100: #f7deec !important;  --cds-hsl-magenta-100: 326.4 61.0% 92.0% !important;
+  --cds-magenta-150: #ffc2e4 !important;  --cds-hsl-magenta-150: 326.6 100.0% 88.0% !important;
+  --cds-magenta-200: #ffafdc !important;  --cds-hsl-magenta-200: 326.2 100.0% 84.3% !important;
+  --cds-magenta-250: #ff9cd4 !important;  --cds-hsl-magenta-250: 326.1 100.0% 80.6% !important;
+  --cds-magenta-300: #ff8bcd !important;  --cds-hsl-magenta-300: 325.9 100.0% 77.3% !important;
+  --cds-magenta-350: #ff7ac6 !important;  --cds-hsl-magenta-350: 325.7 100.0% 73.9% !important;
+  --cds-magenta-400: #ff5bb8 !important;  --cds-hsl-magenta-400: 326.0 100.0% 67.8% !important;
+  --cds-magenta-450: #ff3aaa !important;  --cds-hsl-magenta-450: 325.9 100.0% 61.4% !important;
+  --cds-magenta-500: #ff1a9c !important;  --cds-hsl-magenta-500: 325.9 100.0% 55.1% !important;
+  --cds-magenta-550: #f8008d !important;  --cds-hsl-magenta-550: 325.9 100.0% 48.6% !important;
+  --cds-magenta-600: #da007b !important;  --cds-hsl-magenta-600: 326.1 100.0% 42.7% !important;
+  --cds-magenta-650: #bc006a !important;  --cds-hsl-magenta-650: 326.2 100.0% 36.9% !important;
+  --cds-magenta-700: #9c0059 !important;  --cds-hsl-magenta-700: 325.8 100.0% 30.6% !important;
+  --cds-magenta-750: #800049 !important;  --cds-hsl-magenta-750: 325.8 100.0% 25.1% !important;
+  --cds-magenta-800: #650039 !important;  --cds-hsl-magenta-800: 326.1 100.0% 19.8% !important;
+  --cds-magenta-810: #600036 !important;  --cds-hsl-magenta-810: 326.2 100.0% 18.8% !important;
+  --cds-magenta-820: #5b0034 !important;  --cds-hsl-magenta-820: 325.7 100.0% 17.8% !important;
+  --cds-magenta-830: #560031 !important;  --cds-hsl-magenta-830: 325.8 100.0% 16.9% !important;
+  --cds-magenta-840: #51002e !important;  --cds-hsl-magenta-840: 325.9 100.0% 15.9% !important;
+  --cds-magenta-850: #4b002b !important;  --cds-hsl-magenta-850: 325.6 100.0% 14.7% !important;
+  --cds-magenta-860: #460028 !important;  --cds-hsl-magenta-860: 325.7 100.0% 13.7% !important;
+  --cds-magenta-870: #420025 !important;  --cds-hsl-magenta-870: 326.4 100.0% 12.9% !important;
+  --cds-magenta-880: #3d0022 !important;  --cds-hsl-magenta-880: 326.6 100.0% 12.0% !important;
+  --cds-magenta-890: #380020 !important;  --cds-hsl-magenta-890: 325.7 100.0% 11.0% !important;
+  --cds-magenta-900: #33001d !important;  --cds-hsl-magenta-900: 325.9 100.0% 10.0% !important;
+  --cds-red-0: #ffffff !important;  --cds-hsl-red-0: 0.0 0.0% 100.0% !important;
+  --cds-red-10: #fefbfb !important;  --cds-hsl-red-10: 0.0 60.0% 99.0% !important;
+  --cds-red-20: #fdf6f6 !important;  --cds-hsl-red-20: 0.0 63.6% 97.8% !important;
+  --cds-red-30: #fcf3f3 !important;  --cds-hsl-red-30: 0.0 60.0% 97.1% !important;
+  --cds-red-40: #fbeeee !important;  --cds-hsl-red-40: 0.0 61.9% 95.9% !important;
+  --cds-red-50: #faeaea !important;  --cds-hsl-red-50: 0.0 61.5% 94.9% !important;
+  --cds-red-60: #f9e6e6 !important;  --cds-hsl-red-60: 0.0 61.3% 93.9% !important;
+  --cds-red-70: #f8e1e1 !important;  --cds-hsl-red-70: 0.0 62.2% 92.7% !important;
+  --cds-red-80: #f7dede !important;  --cds-hsl-red-80: 0.0 61.0% 92.0% !important;
+  --cds-red-90: #f6d9d9 !important;  --cds-hsl-red-90: 0.0 61.7% 90.8% !important;
+  --cds-red-100: #ffcbcb !important;  --cds-hsl-red-100: 0.0 100.0% 89.8% !important;
+  --cds-red-150: #ffb1b1 !important;  --cds-hsl-red-150: 0.0 100.0% 84.7% !important;
+  --cds-red-200: #ff9999 !important;  --cds-hsl-red-200: 0.0 100.0% 80.0% !important;
+  --cds-red-250: #ff8282 !important;  --cds-hsl-red-250: 0.0 100.0% 75.5% !important;
+  --cds-red-300: #ff6c6c !important;  --cds-hsl-red-300: 0.0 100.0% 71.2% !important;
+  --cds-red-350: #ff5757 !important;  --cds-hsl-red-350: 0.0 100.0% 67.1% !important;
+  --cds-red-400: #ff3b3b !important;  --cds-hsl-red-400: 0.0 100.0% 61.6% !important;
+  --cds-red-450: #ff1e1e !important;  --cds-hsl-red-450: 0.0 100.0% 55.9% !important;
+  --cds-red-500: #ff0101 !important;  --cds-hsl-red-500: 0.0 100.0% 50.2% !important;
+  --cds-red-550: #e30000 !important;  --cds-hsl-red-550: 0.0 100.0% 44.5% !important;
+  --cds-red-600: #c80000 !important;  --cds-hsl-red-600: 0.0 100.0% 39.2% !important;
+  --cds-red-650: #ad0000 !important;  --cds-hsl-red-650: 0.0 100.0% 33.9% !important;
+  --cds-red-700: #910000 !important;  --cds-hsl-red-700: 0.0 100.0% 28.4% !important;
+  --cds-red-750: #780000 !important;  --cds-hsl-red-750: 0.0 100.0% 23.5% !important;
+  --cds-red-800: #5f0000 !important;  --cds-hsl-red-800: 0.0 100.0% 18.6% !important;
+  --cds-red-810: #5b0000 !important;  --cds-hsl-red-810: 0.0 100.0% 17.8% !important;
+  --cds-red-820: #570000 !important;  --cds-hsl-red-820: 0.0 100.0% 17.1% !important;
+  --cds-red-830: #520000 !important;  --cds-hsl-red-830: 0.0 100.0% 16.1% !important;
+  --cds-red-840: #4e0000 !important;  --cds-hsl-red-840: 0.0 100.0% 15.3% !important;
+  --cds-red-850: #490000 !important;  --cds-hsl-red-850: 0.0 100.0% 14.3% !important;
+  --cds-red-860: #440000 !important;  --cds-hsl-red-860: 0.0 100.0% 13.3% !important;
+  --cds-red-870: #400000 !important;  --cds-hsl-red-870: 0.0 100.0% 12.5% !important;
+  --cds-red-880: #3c0000 !important;  --cds-hsl-red-880: 0.0 100.0% 11.8% !important;
+  --cds-red-890: #370000 !important;  --cds-hsl-red-890: 0.0 100.0% 10.8% !important;
+  --cds-red-900: #330000 !important;  --cds-hsl-red-900: 0.0 100.0% 10.0% !important;
+  --cds-green-0: #ffffff !important;  --cds-hsl-green-0: 0.0 0.0% 100.0% !important;
+  --cds-green-10: #fbfefb !important;  --cds-hsl-green-10: 120.0 60.0% 99.0% !important;
+  --cds-green-20: #f6fdf8 !important;  --cds-hsl-green-20: 137.1 63.6% 97.8% !important;
+  --cds-green-30: #f2fbf5 !important;  --cds-hsl-green-30: 140.0 52.9% 96.7% !important;
+  --cds-green-40: #eefaf1 !important;  --cds-hsl-green-40: 135.0 54.5% 95.7% !important;
+  --cds-green-50: #e9f9ed !important;  --cds-hsl-green-50: 135.0 57.1% 94.5% !important;
+  --cds-green-60: #e5f8e9 !important;  --cds-hsl-green-60: 132.6 57.6% 93.5% !important;
+  --cds-green-70: #e0f6e6 !important;  --cds-hsl-green-70: 136.4 55.0% 92.2% !important;
+  --cds-green-80: #dcf5e3 !important;  --cds-hsl-green-80: 136.8 55.6% 91.2% !important;
+  --cds-green-90: #d8f4df !important;  --cds-hsl-green-90: 135.0 56.0% 90.2% !important;
+  --cds-green-100: #c9fdd6 !important;  --cds-hsl-green-100: 135.0 92.9% 89.0% !important;
+  --cds-green-150: #affdc2 !important;  --cds-hsl-green-150: 134.6 95.1% 83.9% !important;
+  --cds-green-200: #96fcb0 !important;  --cds-hsl-green-200: 135.3 94.4% 78.8% !important;
+  --cds-green-250: #7efb9e !important;  --cds-hsl-green-250: 135.4 94.0% 73.9% !important;
+  --cds-green-300: #67fa8c !important;  --cds-hsl-green-300: 135.1 93.6% 69.2% !important;
+  --cds-green-350: #52fa7c !important;  --cds-hsl-green-350: 135.0 94.4% 65.1% !important;
+  --cds-green-400: #38f968 !important;  --cds-hsl-green-400: 134.9 94.1% 59.8% !important;
+  --cds-green-450: #1cf853 !important;  --cds-hsl-green-450: 135.0 94.0% 54.1% !important;
+  --cds-green-500: #07f142 !important;  --cds-hsl-green-500: 135.1 94.4% 48.6% !important;
+  --cds-green-550: #07d63a !important;  --cds-hsl-green-550: 134.8 93.7% 43.3% !important;
+  --cds-green-600: #06bd34 !important;  --cds-hsl-green-600: 135.1 93.8% 38.2% !important;
+  --cds-green-650: #05a32d !important;  --cds-hsl-green-650: 135.2 94.0% 32.9% !important;
+  --cds-green-700: #048925 !important;  --cds-hsl-green-700: 134.9 94.3% 27.6% !important;
+  --cds-green-750: #04721f !important;  --cds-hsl-green-750: 134.7 93.2% 23.1% !important;
+  --cds-green-800: #035b19 !important;  --cds-hsl-green-800: 135.0 93.6% 18.4% !important;
+  --cds-green-810: #035718 !important;  --cds-hsl-green-810: 135.0 93.3% 17.6% !important;
+  --cds-green-820: #035317 !important;  --cds-hsl-green-820: 135.0 93.0% 16.9% !important;
+  --cds-green-830: #024f16 !important;  --cds-hsl-green-830: 135.6 95.1% 15.9% !important;
+  --cds-green-840: #024b14 !important;  --cds-hsl-green-840: 134.8 94.8% 15.1% !important;
+  --cds-green-850: #024613 !important;  --cds-hsl-green-850: 135.0 94.4% 14.1% !important;
+  --cds-green-860: #024212 !important;  --cds-hsl-green-860: 135.0 94.1% 13.3% !important;
+  --cds-green-870: #023e11 !important;  --cds-hsl-green-870: 135.0 93.8% 12.5% !important;
+  --cds-green-880: #023a10 !important;  --cds-hsl-green-880: 135.0 93.3% 11.8% !important;
+  --cds-green-890: #02360f !important;  --cds-hsl-green-890: 135.0 92.9% 11.0% !important;
+  --cds-green-900: #02320e !important;  --cds-hsl-green-900: 135.0 92.3% 10.2% !important;
+  --cds-yellow-0: #ffffff !important;  --cds-hsl-yellow-0: 0.0 0.0% 100.0% !important;
+  --cds-yellow-10: #fefefc !important;  --cds-hsl-yellow-10: 60.0 50.0% 99.2% !important;
+  --cds-yellow-20: #fdfdf9 !important;  --cds-hsl-yellow-20: 60.0 50.0% 98.4% !important;
+  --cds-yellow-30: #fcfcf6 !important;  --cds-hsl-yellow-30: 60.0 50.0% 97.6% !important;
+  --cds-yellow-40: #fbfcf3 !important;  --cds-hsl-yellow-40: 66.7 60.0% 97.1% !important;
+  --cds-yellow-50: #fafbf0 !important;  --cds-hsl-yellow-50: 65.5 57.9% 96.3% !important;
+  --cds-yellow-60: #f9faed !important;  --cds-hsl-yellow-60: 64.6 56.5% 95.5% !important;
+  --cds-yellow-70: #f8f9ea !important;  --cds-hsl-yellow-70: 64.0 55.6% 94.7% !important;
+  --cds-yellow-80: #f7f8e7 !important;  --cds-hsl-yellow-80: 63.5 54.8% 93.9% !important;
+  --cds-yellow-90: #f6f7e4 !important;  --cds-hsl-yellow-90: 63.2 54.3% 93.1% !important;
+  --cds-yellow-100: #f5f6e1 !important;  --cds-hsl-yellow-100: 62.9 53.8% 92.4% !important;
+  --cds-yellow-150: #f8fdc9 !important;  --cds-hsl-yellow-150: 65.8 92.9% 89.0% !important;
+  --cds-yellow-200: #f6fcb8 !important;  --cds-hsl-yellow-200: 65.3 91.9% 85.5% !important;
+  --cds-yellow-250: #f4fba8 !important;  --cds-hsl-yellow-250: 65.1 91.2% 82.2% !important;
+  --cds-yellow-300: #f2fb98 !important;  --cds-hsl-yellow-300: 65.5 92.5% 79.0% !important;
+  --cds-yellow-350: #f1fa89 !important;  --cds-hsl-yellow-350: 64.8 91.9% 75.9% !important;
+  --cds-yellow-400: #edf96a !important;  --cds-hsl-yellow-400: 65.0 92.3% 69.6% !important;
+  --cds-yellow-450: #e9f74a !important;  --cds-hsl-yellow-450: 64.9 91.5% 62.9% !important;
+  --cds-yellow-500: #e5f62a !important;  --cds-hsl-yellow-500: 65.0 91.9% 56.5% !important;
+  --cds-yellow-550: #e1f40a !important;  --cds-hsl-yellow-550: 64.9 92.1% 49.8% !important;
+  --cds-yellow-600: #c5d609 !important;  --cds-hsl-yellow-600: 65.0 91.9% 43.7% !important;
+  --cds-yellow-650: #aab808 !important;  --cds-hsl-yellow-650: 64.8 91.7% 37.6% !important;
+  --cds-yellow-700: #8d9906 !important;  --cds-hsl-yellow-700: 64.9 92.5% 31.2% !important;
+  --cds-yellow-750: #747e05 !important;  --cds-hsl-yellow-750: 65.0 92.4% 25.7% !important;
+  --cds-yellow-800: #5a6204 !important;  --cds-hsl-yellow-800: 65.1 92.2% 20.0% !important;
+  --cds-yellow-810: #565d04 !important;  --cds-hsl-yellow-810: 64.7 91.8% 19.0% !important;
+  --cds-yellow-820: #515904 !important;  --cds-hsl-yellow-820: 65.6 91.4% 18.2% !important;
+  --cds-yellow-830: #4d5403 !important;  --cds-hsl-yellow-830: 65.2 93.1% 17.1% !important;
+  --cds-yellow-840: #494f03 !important;  --cds-hsl-yellow-840: 64.7 92.7% 16.1% !important;
+  --cds-yellow-850: #434903 !important;  --cds-hsl-yellow-850: 65.1 92.1% 14.9% !important;
+  --cds-yellow-860: #3f4403 !important;  --cds-hsl-yellow-860: 64.6 91.5% 13.9% !important;
+  --cds-yellow-870: #3a3f03 !important;  --cds-hsl-yellow-870: 65.0 90.9% 12.9% !important;
+  --cds-yellow-880: #363b02 !important;  --cds-hsl-yellow-880: 65.3 93.4% 12.0% !important;
+  --cds-yellow-890: #323602 !important;  --cds-hsl-yellow-890: 64.6 92.9% 11.0% !important;
+  --cds-yellow-900: #2d3102 !important;  --cds-hsl-yellow-900: 65.1 92.2% 10.0% !important;
+  --cds-orange-0: #ffffff !important;  --cds-hsl-orange-0: 0.0 0.0% 100.0% !important;
+  --cds-orange-10: #fefdfb !important;  --cds-hsl-orange-10: 40.0 60.0% 99.0% !important;
+  --cds-orange-20: #fdfaf7 !important;  --cds-hsl-orange-20: 30.0 60.0% 98.0% !important;
+  --cds-orange-30: #fcf8f4 !important;  --cds-hsl-orange-30: 30.0 57.1% 97.3% !important;
+  --cds-orange-40: #fbf6f0 !important;  --cds-hsl-orange-40: 32.7 57.9% 96.3% !important;
+  --cds-orange-50: #faf4ed !important;  --cds-hsl-orange-50: 32.3 56.5% 95.5% !important;
+  --cds-orange-60: #f9f1e9 !important;  --cds-hsl-orange-60: 30.0 57.1% 94.5% !important;
+  --cds-orange-70: #f8efe5 !important;  --cds-hsl-orange-70: 31.6 57.6% 93.5% !important;
+  --cds-orange-80: #f8ede2 !important;  --cds-hsl-orange-80: 30.0 61.1% 92.9% !important;
+  --cds-orange-90: #f7ebde !important;  --cds-hsl-orange-90: 31.2 61.0% 92.0% !important;
+  --cds-orange-100: #f6e8da !important;  --cds-hsl-orange-100: 30.0 60.9% 91.0% !important;
+  --cds-orange-150: #ffdeba !important;  --cds-hsl-orange-150: 31.3 100.0% 86.5% !important;
+  --cds-orange-200: #ffd4a5 !important;  --cds-hsl-orange-200: 31.3 100.0% 82.4% !important;
+  --cds-orange-250: #ffca91 !important;  --cds-hsl-orange-250: 31.1 100.0% 78.4% !important;
+  --cds-orange-300: #ffc07d !important;  --cds-hsl-orange-300: 30.9 100.0% 74.5% !important;
+  --cds-orange-350: #ffb86b !important;  --cds-hsl-orange-350: 31.2 100.0% 71.0% !important;
+  --cds-orange-400: #ffa94d !important;  --cds-hsl-orange-400: 31.0 100.0% 65.1% !important;
+  --cds-orange-450: #ff9a2e !important;  --cds-hsl-orange-450: 31.0 100.0% 59.0% !important;
+  --cds-orange-500: #ff8b0f !important;  --cds-hsl-orange-500: 31.0 100.0% 52.9% !important;
+  --cds-orange-550: #ef7b00 !important;  --cds-hsl-orange-550: 30.9 100.0% 46.9% !important;
+  --cds-orange-600: #d26d00 !important;  --cds-hsl-orange-600: 31.1 100.0% 41.2% !important;
+  --cds-orange-650: #b55e00 !important;  --cds-hsl-orange-650: 31.2 100.0% 35.5% !important;
+  --cds-orange-700: #974e00 !important;  --cds-hsl-orange-700: 31.0 100.0% 29.6% !important;
+  --cds-orange-750: #7d4000 !important;  --cds-hsl-orange-750: 30.7 100.0% 24.5% !important;
+  --cds-orange-800: #623300 !important;  --cds-hsl-orange-800: 31.2 100.0% 19.2% !important;
+  --cds-orange-810: #5e3000 !important;  --cds-hsl-orange-810: 30.6 100.0% 18.4% !important;
+  --cds-orange-820: #592e00 !important;  --cds-hsl-orange-820: 31.0 100.0% 17.5% !important;
+  --cds-orange-830: #542c00 !important;  --cds-hsl-orange-830: 31.4 100.0% 16.5% !important;
+  --cds-orange-840: #502900 !important;  --cds-hsl-orange-840: 30.8 100.0% 15.7% !important;
+  --cds-orange-850: #4a2600 !important;  --cds-hsl-orange-850: 30.8 100.0% 14.5% !important;
+  --cds-orange-860: #462400 !important;  --cds-hsl-orange-860: 30.9 100.0% 13.7% !important;
+  --cds-orange-870: #412200 !important;  --cds-hsl-orange-870: 31.4 100.0% 12.7% !important;
+  --cds-orange-880: #3c1f00 !important;  --cds-hsl-orange-880: 31.0 100.0% 11.8% !important;
+  --cds-orange-890: #381d00 !important;  --cds-hsl-orange-890: 31.1 100.0% 11.0% !important;
+  --cds-orange-900: #331a00 !important;  --cds-hsl-orange-900: 30.6 100.0% 10.0% !important;
+  --cds-aqua-0: #ffffff !important;  --cds-hsl-aqua-0: 0.0 0.0% 100.0% !important;
+  --cds-aqua-10: #fcfefe !important;  --cds-hsl-aqua-10: 180.0 50.0% 99.2% !important;
+  --cds-aqua-20: #f9fdfd !important;  --cds-hsl-aqua-20: 180.0 50.0% 98.4% !important;
+  --cds-aqua-30: #f6fcfd !important;  --cds-hsl-aqua-30: 188.6 63.6% 97.8% !important;
+  --cds-aqua-40: #f4fafc !important;  --cds-hsl-aqua-40: 195.0 57.1% 97.3% !important;
+  --cds-aqua-50: #f1f9fb !important;  --cds-hsl-aqua-50: 192.0 55.6% 96.5% !important;
+  --cds-aqua-60: #eef8fa !important;  --cds-hsl-aqua-60: 190.0 54.5% 95.7% !important;
+  --cds-aqua-70: #ebf7fa !important;  --cds-hsl-aqua-70: 192.0 60.0% 95.1% !important;
+  --cds-aqua-80: #e8f6f9 !important;  --cds-hsl-aqua-80: 190.6 58.6% 94.3% !important;
+  --cds-aqua-90: #e5f5f8 !important;  --cds-hsl-aqua-90: 189.5 57.6% 93.5% !important;
+  --cds-aqua-100: #e2f3f7 !important;  --cds-hsl-aqua-100: 191.4 56.8% 92.7% !important;
+  --cds-aqua-150: #c9f5fe !important;  --cds-hsl-aqua-150: 190.2 96.4% 89.2% !important;
+  --cds-aqua-200: #b9f1fe !important;  --cds-hsl-aqua-200: 191.3 97.2% 86.1% !important;
+  --cds-aqua-250: #a9eefe !important;  --cds-hsl-aqua-250: 191.3 97.7% 82.9% !important;
+  --cds-aqua-300: #9aebfd !important;  --cds-hsl-aqua-300: 190.9 96.1% 79.8% !important;
+  --cds-aqua-350: #8be8fd !important;  --cds-hsl-aqua-350: 191.1 96.6% 76.9% !important;
+  --cds-aqua-400: #6be2fd !important;  --cds-hsl-aqua-400: 191.1 97.3% 70.6% !important;
+  --cds-aqua-450: #49dbfc !important;  --cds-hsl-aqua-450: 191.1 96.8% 63.7% !important;
+  --cds-aqua-500: #28d5fc !important;  --cds-hsl-aqua-500: 191.0 97.2% 57.3% !important;
+  --cds-aqua-550: #06cefb !important;  --cds-hsl-aqua-550: 191.0 96.8% 50.4% !important;
+  --cds-aqua-600: #03b6de !important;  --cds-hsl-aqua-600: 191.0 97.3% 44.1% !important;
+  --cds-aqua-650: #039dbf !important;  --cds-hsl-aqua-650: 190.9 96.9% 38.0% !important;
+  --cds-aqua-700: #02829f !important;  --cds-hsl-aqua-700: 191.1 97.5% 31.6% !important;
+  --cds-aqua-750: #026b82 !important;  --cds-hsl-aqua-750: 190.8 97.0% 25.9% !important;
+  --cds-aqua-800: #025365 !important;  --cds-hsl-aqua-800: 190.9 96.1% 20.2% !important;
+  --cds-aqua-810: #014f60 !important;  --cds-hsl-aqua-810: 190.7 97.9% 19.0% !important;
+  --cds-aqua-820: #014b5b !important;  --cds-hsl-aqua-820: 190.7 97.8% 18.0% !important;
+  --cds-aqua-830: #014756 !important;  --cds-hsl-aqua-830: 190.6 97.7% 17.1% !important;
+  --cds-aqua-840: #014351 !important;  --cds-hsl-aqua-840: 190.5 97.6% 16.1% !important;
+  --cds-aqua-850: #013e4b !important;  --cds-hsl-aqua-850: 190.5 97.4% 14.9% !important;
+  --cds-aqua-860: #013a46 !important;  --cds-hsl-aqua-860: 190.4 97.2% 13.9% !important;
+  --cds-aqua-870: #013541 !important;  --cds-hsl-aqua-870: 191.2 97.0% 12.9% !important;
+  --cds-aqua-880: #01313c !important;  --cds-hsl-aqua-880: 191.2 96.7% 12.0% !important;
+  --cds-aqua-890: #012d37 !important;  --cds-hsl-aqua-890: 191.1 96.4% 11.0% !important;
+  --cds-aqua-900: #012932 !important;  --cds-hsl-aqua-900: 191.0 96.1% 10.0% !important;
+  --cds-clay: #bd93f9 !important;  --cds-clay-emphasized: #a978f0 !important;
+  --cds-hsl-clay: 264.7 89.5% 77.6% !important;  --cds-hsl-clay-emphasized: 264.5 80.0% 70.6% !important;
+  --cds-plum: #bd93f9 !important;  --cds-mineral: #8be9fd !important;
+  --cds-fill-git-added-hover: #50fa7b !important;  --cds-fill-git-removed-hover: #ff5555 !important;
+  --cds-fill-git-modified-hover: #f1fa8c !important;  --cds-fill-git-merged-hover: #bd93f9 !important;
+  --cds-fill-git-closed-hover: #ff5555 !important;  --cds-fill-git-conflicting-hover: #ffb86c !important;
+}
+:is(html, .cds-root)[data-mode="dark"] .dframe-root {
+  --df-z0: 231 15% 12% !important;  --df-z1: 231 15% 18% !important;  --df-z2: 231 15% 22% !important;
+  --df-z3: 231 15% 27% !important;  --df-z4: 232 14% 31% !important;  --df-z5: 231 15% 40% !important;  --df-z6: 225 27% 65% !important;
+}
+
+/* ---- Background gradient (matches the terminal's "dracula vertical": purple tint at top -> deep navy at bottom) ----
+   The main content containers are made transparent so the body gradient shows through.
+   The sidebar keeps its solid surface for separation. To switch it off, delete this block. */
+:is(html, .cds-root)[data-mode="dark"] body {
+  background: linear-gradient(180deg, #2e2a44 0%, #1b1c26 100%) fixed !important;
+  background-color: #1b1c26 !important;
+}
+:is(html, .cds-root)[data-mode="dark"] main.dframe-content { background-color: transparent !important; }
+:is(html, .cds-root)[data-mode="dark"] div.pointer-events-none.absolute.inset-0.bg-surface-1 {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+/* Composer area. Messages scroll behind the composer, so the site masks them with (a) a 48px fade above the
+   composer and (b) a band under the composer that carries a 32px shadow reaching up behind the composer card.
+   We keep that exact geometry and recolour both to the bottom slice of the page gradient (#1d1e2a -> #1b1c26),
+   which is within a shade of the body gradient at that height on any normal viewport. The 24px gap directly
+   above the composer stays transparent so the fade reads as a fade, not an edge. */
+:is(html, .cds-root)[data-mode="dark"] main.dframe-content div.sticky.bottom-0 { background: none !important; }
+:is(html, .cds-root)[data-mode="dark"] main.dframe-content .bg-page.grid {
+  background-color: #1b1c26 !important;
+  box-shadow: 0 0 0 32px #1c1d28 !important;
+}
+:is(html, .cds-root)[data-mode="dark"] .page-fade-b {
+  background: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0) 100%) !important;
+}
+:is(html, .cds-root)[data-mode="dark"] .page-fade-t { background: none !important; }
+/* Sticky page header on list pages (Recents, Projects...): match the gradient slice it sits over, and restore its scroll fade in Dracula tones */
+:is(html, .cds-root)[data-mode="dark"] div.sticky.top-0.bg-page { background: linear-gradient(180deg, #2d2943 0%, #2c2940 100%) !important; }
+:is(html, .cds-root)[data-mode="dark"] div.sticky.top-0.bg-page .page-fade-t { background: linear-gradient(to bottom, #2c2940 0%, rgba(44, 41, 64, 0) 100%) !important; }
+/* Alternate composer layout (seen on other accounts): the disclaimer row is its own element with a page-colour
+   background and a negative top margin reaching up behind the composer. Same gradient-bottom tones. */
+:is(html, .cds-root)[data-mode="dark"] [data-disclaimer="true"] {
+  background: linear-gradient(180deg, #1c1d28 0%, #1b1c26 100%) !important;
+}
+/* "Quick answer" affordance that fades in above the composer while a response is running.
+   The site scrims it with a Tailwind gradient built from --bg-100 (a raised surface tone), which reads
+   as a light band over the page gradient. Recolour to the same bottom-of-page tones as .page-fade-b,
+   keeping the site's stop positions (solid -> 90% at the midpoint -> transparent). */
+:is(html, .cds-root)[data-mode="dark"] [data-testid="answer-now-above-composer"] {
+  background-image: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0.9) 50%, rgba(29, 30, 42, 0) 100%) !important;
+}
+
+/* ---- Sidebar toggle stays top-left ------------------------------------------------
+   Pinned open, the site swaps the top-left toggle for the "Claude" wordmark and moves
+   the toggle to the footer next to the account menu. Hide the wordmark and pin the
+   footer toggle to the same spot the collapsed/hover-peek toggle uses (8px, 8px). */
+:is(html, .cds-root)[data-mode="dark"] aside.dframe-sidebar .df-titlebar-brand { display: none !important; }
+:is(html, .cds-root)[data-mode="dark"] aside.dframe-sidebar .df-footer-aux button[aria-label="Hide sidebar"] {
+  position: fixed !important;
+  top: 8px !important;
+  left: 8px !important;
+  z-index: 50 !important;
+}
+
+/* ---- Claude Code view (claude.ai/code and the desktop app's Code tab) ---------------
+   Its root is an opaque grid over the body gradient; the chat view's equivalent
+   (main.dframe-content) is already transparent above. Same treatment. */
+:is(html, .cds-root)[data-mode="dark"] div.grid.w-full.overflow-hidden.bg-surface-1 {
+  background-color: transparent !important;
+}
+/* Daily activity heatmap: each cell is an inline hsl(217 70% L%) — blue at fixed hue,
+   lightness = intensity. Rotate hue 217 -> ~265 (Dracula purple) and keep the ladder. */
+:is(html, .cds-root)[data-mode="dark"] [aria-label="Daily activity heatmap"] {
+  filter: hue-rotate(48deg) saturate(0.9);
+}
+/* Clawd, the pixel mascot peeking over the composer: inline SVG with attribute fills. */
+:is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(216,118,86)"] { fill: #bd93f9 !important; }
+:is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(190,104,77)"] { fill: #9a6ee0 !important; }
+:is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(139,139,139)"] { fill: #6272a4 !important; }
+
+/* ---- Artifact viewer shell (claude.ai/code/artifact/*, /public/artifacts/*, and the same shell
+   embedded in chat/Code panels) ---------------------------------------------------------------
+   A separate app from the chat UI: html[data-frame-uuid], no .cds-root at the top level, and its
+   own --bg/--fg/--mut/... tokens set in an inline stylesheet. Only the header bar and the
+   loading / error / consent screens are the shell's own; the artifact itself is an iframe.
+   Dark is html[data-mode=dark] when a theme is chosen; with "system" the shell sets nothing,
+   so anything not explicitly light is treated as dark, like the rest of this userstyle. */
+html[data-frame-uuid]:not([data-mode="light"]) {
+  --bg: #2e2a44 !important;          /* top of the page gradient, so the header blends into it */
+  --fg: #f8f8f2 !important;
+  --mut: #bec5da !important;         /* = --cds-gray-200 above */
+  --spin: #7f8db5 !important;        /* = --cds-gray-400 */
+  --line: #f8f8f21a !important;
+  --div: #f8f8f20d !important;
+  --bord: #f8f8f233 !important;
+  --hov: #f8f8f213 !important;
+  --surf: #343746 !important;        /* = --cds-gray-800 */
+  --brand: #bd93f9 !important;
+  --primary: #bd93f9 !important;     /* "Go back home" / "Sign in" / consent buttons */
+  --on-primary: #282a36 !important;
+}
+html[data-frame-uuid]:not([data-mode="light"]) body {
+  background: linear-gradient(180deg, #2e2a44 0%, #1b1c26 100%) fixed !important;
+  background-color: #1b1c26 !important;
+}
+/* Error screens ("Page not found", "Something went wrong"): the Claude wordmark is an inline SVG
+   whose asterisk carries a hard-coded clay fill; the word itself is currentColor. */
+html[data-frame-uuid]:not([data-mode="light"]) .err-logo path[fill="#D97757"] { fill: #bd93f9 !important; }
+}
