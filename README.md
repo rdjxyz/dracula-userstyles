@@ -11,7 +11,9 @@
 
 claude.ai in dark mode: chat, Claude Code, and the artifact viewer. Remaps the site's own colour ramps, so every surface, accent and status colour follows the palette, with a purple-to-navy page gradient.
 
-![claude.ai with the Dracula userstyle](screenshots/claude.jpg)
+![claude.ai chat with the Dracula userstyle](screenshots/claude.jpg)
+
+![Claude Code on claude.ai with the Dracula userstyle](screenshots/claude-code.jpg)
 
 [![Install with Stylus](https://img.shields.io/badge/Install-with_Stylus-bd93f9?style=for-the-badge&labelColor=282a36)](https://raw.githubusercontent.com/rdjxyz/dracula-userstyles/main/claude-dracula.user.css)
 
@@ -27,7 +29,11 @@ Layers on Gmail's built-in Dark theme (Settings, Themes, Dark). Recolours the li
 
 The Klaviyo app, built on Klaviyo's own design tokens so the theme follows its component semantics. The email template editor canvas is left untouched so your designs stay true.
 
-![Klaviyo with the Dracula userstyle](screenshots/klaviyo.jpg)
+![Klaviyo home with the Dracula userstyle](screenshots/klaviyo.jpg)
+
+![Klaviyo flow editor with the Dracula userstyle](screenshots/klaviyo-flow.jpg)
+
+![Klaviyo email editor with the Dracula userstyle, canvas left untouched](screenshots/klaviyo-email.jpg)
 
 [![Install with Stylus](https://img.shields.io/badge/Install-with_Stylus-bd93f9?style=for-the-badge&labelColor=282a36)](https://raw.githubusercontent.com/rdjxyz/dracula-userstyles/main/klaviyo-dracula.user.css)
 
