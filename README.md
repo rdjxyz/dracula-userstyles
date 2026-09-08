@@ -35,6 +35,8 @@ The Klaviyo app, built on Klaviyo's own design tokens so the theme follows its c
 
 The border Claude in Chrome paints around a tab while it controls it, recoloured from brand orange to Dracula purple, along with its cursor, stop pill and tooltips.
 
+![Claude in Chrome controlling a tab with the Dracula glow](screenshots/glow.jpg)
+
 [![Install with Stylus](https://img.shields.io/badge/Install-with_Stylus-bd93f9?style=for-the-badge&labelColor=282a36)](https://raw.githubusercontent.com/rdjxyz/dracula-userstyles/main/claude-dracula-glow.user.css)
 
 ## Updating
