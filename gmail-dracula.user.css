@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail — Dracula
 @namespace      rdj.xyz
-@version        1.3.0
+@version        1.4.0
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -112,6 +112,22 @@ div.at[style*="e1e3e1"] .av     { color: var(--d-fg) !important; }
    them breaks dark-designed emails. */
 .nH.a98.iY                      { background: var(--d-bg) !important; }
 .ii.gt                          { background: #ffffff !important; border-radius: 8px !important; }
+
+/* Plain messages get a dark card. "Plain" = the body carries no tables, no explicit backgrounds
+   and no inline text colours, which is what person-to-person mail from Gmail/Outlook/Apple Mail
+   looks like. Anything designed (newsletters, receipts, GitHub/Google notifications) fails the
+   test and keeps the white card above, because its own colours assume a white ground.
+   Fallback is always the readable white card, never dark-on-dark. */
+.ii.gt:not(:has(.a3s table, .a3s [bgcolor], .a3s font[color], .a3s [style*="color:"],
+                .a3s [style*="background-color"], .a3s [style*="background:#"], .a3s [style*="background: #"],
+                .a3s [style*="background:rgb"], .a3s [style*="background: rgb"], .a3s [style*="background:url"])) {
+  background: var(--d-bg-light) !important;
+  & .a3s                             { color: var(--d-fg) !important; }
+  & .a3s a:not([style*="color"])     { color: var(--d-cyan) !important; }
+  & .a3s blockquote                  { border-left-color: var(--d-fg-mute) !important; }
+  & .ajR                             { background: var(--d-line) !important; }   /* "..." trimmed-quote toggle */
+  & .ajR .ajT                        { background-color: var(--d-fg-dim) !important; }
+}
 .gE.iv.gt, .adn.ads, .gs,
 .nH.if, .aia, .aeJ, .h7, .G3    { background: transparent !important; }
 .hP, .ha h2                     { color: var(--d-fg) !important; font-weight: 500 !important; }
