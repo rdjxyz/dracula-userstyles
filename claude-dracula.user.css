@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.7.0
+@version        1.7.1
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -406,6 +406,25 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
    (main.dframe-content) is already transparent above. Same treatment. */
 :is(html, .cds-root)[data-mode="dark"] div.grid.w-full.overflow-hidden.bg-surface-1 {
   background-color: transparent !important;
+}
+/* Transcript scroll fades. The site fades the Code transcript's top and bottom edges with sticky strips
+   that paint a flat surface colour (~#272935) across the message column only. Over our transparent,
+   gradient-backed Code view that slab reads as a grey band — and recolouring the strip can't fix it:
+   the page-gradient's tone under the strip shifts with scroll position, window height and composer
+   height (so no single colour matches), and the strip spans only the centre column, so even a matched
+   colour shows its left/right edges against the gradient as a faint rectangle. Instead, drop the strips'
+   paint and fade the transcript *content* with a mask on the scroller itself, full width, so the edges
+   dissolve into whatever gradient is actually behind them — nothing to colour-match, correct at every
+   window size, scroll position and composer height. Verified in-browser at top, middle and bottom.
+   Scoped with :has() to the Code transcript feed (the scroller holding the epitaxy fade strips), so the
+   chat view and every other scroller are untouched. */
+:is(html, .cds-root)[data-mode="dark"] .scroll-fade-strip-top[class*="epitaxy-transcript-surface"],
+:is(html, .cds-root)[data-mode="dark"] .scroll-fade-strip-bottom[class*="epitaxy-transcript-surface"] {
+  background: none !important;
+}
+:is(html, .cds-root)[data-mode="dark"] [data-autoscroll-container]:has(.scroll-fade-strip-top[class*="epitaxy-transcript-surface"]) {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 34px, #000 calc(100% - 52px), transparent 100%) !important;
+          mask-image: linear-gradient(to bottom, transparent 0, #000 34px, #000 calc(100% - 52px), transparent 100%) !important;
 }
 /* Daily activity heatmap: each cell is an inline hsl(217 70% L%) — blue at fixed hue,
    lightness = intensity. Rotate hue 217 -> ~265 (Dracula purple) and keep the ladder. */
