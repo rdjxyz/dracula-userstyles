@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.7.1
+@version        1.7.2
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -376,6 +376,20 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
 /* Sticky page header on list pages (Recents, Projects...): match the gradient slice it sits over, and restore its scroll fade in Dracula tones */
 :is(html, .cds-root)[data-mode="dark"] div.sticky.top-0.bg-page { background: linear-gradient(180deg, #2d2943 0%, #2c2940 100%) !important; }
 :is(html, .cds-root)[data-mode="dark"] div.sticky.top-0.bg-page .page-fade-t { background: linear-gradient(to bottom, #2c2940 0%, rgba(44, 41, 64, 0) 100%) !important; }
+/* Learning page ("Claude Academy", /learning) sticky header. Same sticky top-of-page header as the list
+   pages above, but the site tags it bg-[var(--df-bg-page,var(--cds-surface-1))] instead of .bg-page, so the
+   rule above missed it and it painted a flat --cds-surface-1 slab over the gradient. Full width (no
+   left/right edges) and fixed at the top, so the same top-of-page gradient slice matches it. Verified in
+   Claude in Chrome, static and scrolled. */
+:is(html, .cds-root)[data-mode="dark"] div.sticky.top-0[class*="--df-bg-page"] {
+  background: linear-gradient(180deg, #2d2943 0%, #2c2940 100%) !important;
+}
+/* ...and the scroll-fade the site pins just under that header (bg-gradient-to-b, from the same
+   --df-bg-page/--cds-surface-1 var to transparent) that content scrolls up behind. Its flat start colour
+   was the same grey slab; recolour it to the gradient slice so content dissolves into the page gradient. */
+:is(html, .cds-root)[data-mode="dark"] .bg-gradient-to-b[class*="--df-bg-page"] {
+  background: linear-gradient(180deg, #2c2940 0%, transparent 100%) !important;
+}
 /* Alternate composer layout (seen on other accounts): the disclaimer row is its own element with a page-colour
    background and a negative top margin reaching up behind the composer. Same gradient-bottom tones. */
 :is(html, .cds-root)[data-mode="dark"] [data-disclaimer="true"] {
