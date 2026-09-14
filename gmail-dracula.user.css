@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail Dracula
 @namespace      rdj.xyz
-@version        1.4.1
+@version        1.4.2
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -38,6 +38,25 @@ form.gb_Pd:focus-within         { background: var(--d-bg-light) !important;
                                   box-shadow: 0 0 0 1px var(--d-purple) !important; }
 form.gb_Pd input                { color: var(--d-fg) !important; }
 form.gb_Pd input::placeholder   { color: var(--d-meta) !important; }
+/* suggestions dropdown: one surface with the focused field above it */
+form[role=search] tr.aRp,
+form[role=search] table.gssb_m,
+form[role=search] td.gssb_e     { background: var(--d-bg-light) !important; }
+form[role=search] .gssb_i td,
+form[role=search] .gsar_a:hover { background: var(--d-line) !important; }   /* keyboard/hover row */
+form[role=search] .gssb_i td.gssb_a { border-left-color: var(--d-purple) !important; }
+form[role=search] .gssb_i .asor_e,
+form[role=search] .gssb_i .asor_k { color: var(--d-fg-dim) !important; }   /* 5.9:1 on --d-line */
+form[role=search] .aSP          { border-top-color: var(--d-line) !important; }
+form[role=search] .H2           { background: transparent !important; border-color: var(--d-line) !important; }
+form[role=search] .H2:hover     { background: var(--d-line) !important; }
+form[role=search] .H5          { color: var(--d-fg-dim) !important; }
+form[role=search] .asor_a,
+form[role=search] .asor_b       { color: var(--d-fg) !important; }
+form[role=search] .asor_e,
+form[role=search] .asor_k       { color: var(--d-meta) !important; }
+form[role=search] .gsoi,
+form[role=search] .asor_o       { filter: invert(1) !important; opacity: .75; }   /* envelope + paperclip PNGs */
 
 /* ---------- left nav ---------- */
 div.aeN, div.aeN .aim, div.aeN .wT { background: var(--d-bg-dark) !important; }
@@ -56,8 +75,9 @@ div.aic                         { background: transparent !important; }
                                   box-shadow: 0 1px 4px rgba(0,0,0,.45) !important; }
 .T-I.T-I-KE.L3:hover            { background: var(--d-pink) !important; }
 
-/* ---------- toolbar ---------- */
-.G-atb, .ar9, .aqL, .D.E, .nH.aqK { background: transparent !important; }
+/* ---------- toolbar ----------
+   background-COLOR only: .ar9 is also the Delete button's icon, drawn as a background-image */
+.G-atb, .ar9, .aqL, .D.E, .nH.aqK { background-color: transparent !important; }
 .G-atb                          { border-bottom: 1px solid var(--d-line) !important; }
 
 /* ---------- thread list ---------- */
@@ -92,6 +112,10 @@ tr.zA.x7 .xW span               { color: #d5dae9 !important; }
 tr.zA:hover .bog span, tr.zA.x7 .bog span,
 tr.zA:hover .yW span, tr.zA.x7 .yW span { color: var(--d-fg) !important; }
 
+/* search-term highlight keeps Gmail's yellow; the row/hover rules above would make its text white (1.3:1) */
+span.il, tr.zA span.il,
+tr.zA:hover span.il             { color: var(--d-bg-dark) !important; }
+
 /* Label chips: recolor ONLY Gmail's default grey (#e1e3e1) chips.
    Chips carrying a user-picked label colour are left untouched. */
 div.at[style*="e1e3e1"]         { background-color: var(--d-line) !important;
@@ -111,23 +135,61 @@ div.at[style*="e1e3e1"] .av     { color: var(--d-fg) !important; }
    authored. Text colours INSIDE the body are left native on purpose — forcing
    them breaks dark-designed emails. */
 .nH.a98.iY                      { background: var(--d-bg) !important; }
-.ii.gt                          { background: #ffffff !important; border-radius: 8px !important; }
+.ii.gt                          { background: #ffffff !important; border-radius: 8px !important;
+                                  padding: 14px 18px !important; box-sizing: border-box !important; }
 
-/* Plain messages get a dark card. "Plain" = the body carries no tables, no explicit backgrounds
-   and no inline text colours, which is what person-to-person mail from Gmail/Outlook/Apple Mail
-   looks like. Anything designed (newsletters, receipts, GitHub/Google notifications) fails the
-   test and keeps the white card above, because its own colours assume a white ground.
-   Fallback is always the readable white card, never dark-on-dark. */
-.ii.gt:not(:has(.a3s table, .a3s [bgcolor], .a3s font[color], .a3s [style*="color:"],
+/* Plain messages get a dark card. "Plain" = the body has no tables and no explicit backgrounds,
+   which is what person-to-person mail (Gmail/Outlook/Apple Mail, incl. styled signatures) looks
+   like. Inline text colours are allowed but remapped: they were picked for a white ground (e.g.
+   #888 signatures fail on dark), so they all become one readable secondary tone.
+   Anything designed (newsletters, receipts, GitHub/Google notifications) has tables or
+   backgrounds and keeps the white card above. Never dark-on-dark. */
+.ii.gt:not(:has(.a3s table, .a3s [bgcolor],
                 .a3s [style*="background-color"], .a3s [style*="background:#"], .a3s [style*="background: #"],
                 .a3s [style*="background:rgb"], .a3s [style*="background: rgb"], .a3s [style*="background:url"])) {
   background: var(--d-bg-light) !important;
   & .a3s                             { color: var(--d-fg) !important; }
-  & .a3s a:not([style*="color"])     { color: var(--d-cyan) !important; }
+  & .a3s [style*="color:"],
+  & .a3s font[color]                 { color: var(--d-fg-dim) !important; }
+  & .a3s a,
+  & .a3s a [style*="color:"]         { color: var(--d-cyan) !important; }
   & .a3s blockquote                  { border-left-color: var(--d-fg-mute) !important; }
   & .ajR                             { background: var(--d-line) !important; }   /* "..." trimmed-quote toggle */
-  & .ajR .ajT                        { background-color: var(--d-fg-dim) !important; }
+  & .ajR .ajT                        { filter: invert(1) !important; }
 }
+
+/* collapsed messages in a thread: snippet was #555 (2.2:1), the "N more" circle white */
+.iA.g6, .iA.g6 span             { color: var(--d-meta) !important; }
+.G3 span.adx                    { background: var(--d-bg-light) !important; box-shadow: 0 0 0 1px var(--d-line) !important; }
+/* "Sent N days ago. Follow up?" nudge bar */
+div.bAR                         { background: var(--d-bg-light) !important; border-bottom: 1px solid var(--d-line) !important; }
+div.bAR .bAV                    { color: var(--d-fg-dim) !important; }
+div.bAR [class*="mUIrbf-anl"]   { color: var(--d-cyan) !important; }
+
+/* attachment strip header ("One attachment · Scanned by Gmail · Add to Drive") */
+.hq.gt .aVW, .hq.gt .aVW span,
+.hq.gt .a2H, .hq.gt [class*="mUIrbf-anl"] { color: var(--d-meta) !important; }
+
+/* Gmail's smart summary card above receipts/orders ("Order placed on ...") */
+.aHU .nH.qY                     { background: var(--d-bg-light) !important;
+                                  border: 1px solid var(--d-line) !important; box-shadow: none !important; }
+.aHU .nH.qY, .nH.qY .t1,
+.nH.qY .vU                      { color: var(--d-fg) !important; }
+.nH.qY .t2, .nH.qY .vL,
+.nH.qY .bgb                     { color: var(--d-meta) !important; }
+.nH.qY .bga                     { border-top-color: var(--d-line) !important; }
+.nH.qY .tl, .nH.qY .an0 img     { filter: invert(1) !important; opacity: .8; }
+
+/* sender details popup (the arrow under "to me") */
+.ajA.SK                         { background: var(--d-bg-light) !important;
+                                  border: 1px solid var(--d-line) !important; border-radius: 8px !important;
+                                  box-shadow: 0 8px 28px rgba(0,0,0,.55) !important; }
+.ajA.SK, .ajA.SK span, .ajA.SK td { color: var(--d-fg) !important; }
+.ajA.SK td:first-child,
+.ajA.SK td:first-child span     { color: var(--d-meta) !important; }   /* labels column only */
+.ajA.SK a                       { color: var(--d-cyan) !important; }
+.ajA.SK .gD, .ajA.SK .go,
+.ajA.SK .gD span                { color: var(--d-cyan) !important; }
 .gE.iv.gt, .adn.ads, .gs,
 .nH.if, .aia, .aeJ, .h7, .G3    { background: transparent !important; }
 .hP, .ha h2                     { color: var(--d-fg) !important; font-weight: 500 !important; }
@@ -151,8 +213,21 @@ span.ams:hover                  { background: var(--d-line) !important;
    Body/subject colours are userstyle-only and are NOT serialised into sent mail. */
 .nH.Hy.aXJ > .nH > .l.m         { background: var(--d-bg-dark) !important; }
 .l.m, .l.m *                    { color: var(--d-fg) !important; }
+/* One surface for compose AND the inline reply card (td.I5.bzE / table.IG were left white):
+   the same --d-bg-light as message cards, so a reply reads as the next card in the thread. */
 .aaZ, td.Ap, .aDj.ahe,
-.aoI, .GP, .btC, .aGb           { background: var(--d-bg) !important; }
+.aoI, .GP, .btC, .aGb,
+td.I5:has(.editable), table.IG  { background: var(--d-bg-light) !important; }   /* .bzE only while focused */
+td.I5:has(.editable)            { box-shadow: 0 0 0 1px var(--d-line) !important; }
+.ip.adB .aoI                    { background: transparent !important; }   /* inline reply: avatar gutter stays pane-coloured */
+/* Gmail treats compose as a light surface and draws its icons as dark PNGs (*_nv700 / *_black).
+   On the dark surface they vanish, so flip them; Gmail's own opacity still marks disabled ones. */
+.M9 .aaA, .M9 .J-Z-M-I-JG, .M9 .J-JN-M-I-JG,
+.M9 .og.T-I-J3, .M9 .mL, .M9 .Sz, .M9 .dv, .M9 .ajT { filter: invert(1) brightness(.95) !important; }
+.M9 .ajR                        { background: var(--d-line) !important; }
+.M9 .J-JN-M-I::after            { border-top-color: var(--d-fg-dim) !important; } /* reply-type caret (CSS triangle) */
+.M9 .J-Z-axR                    { background: var(--d-line) !important; }         /* toolbar dividers */
+.M9 .J-Z-I-KO[aria-pressed=true]::before { background: var(--d-sel-nav) !important; } /* "Aa" on: fill is a pseudo */
 .aDh, .fX, .aoD, .wO            { background: transparent !important; }
 .aDj.ahe, .aDj.ahe *            { border-color: var(--d-line) !important; }
 input.agP, input.aoT, textarea.aoT,
@@ -167,13 +242,18 @@ input.agP, input.aoT, textarea.aoT,
 .Am.Al.editable,
 .Am.aiL.Al.editable             { color: var(--d-fg) !important; background: transparent !important; }
 .J-Z, .aX.MNXB3e .aZ .J-Z,
-.n1tfz                          { background: var(--d-bg-dark) !important;
+.n1tfz                          { background: var(--d-bg) !important;
                                   border-color: var(--d-line) !important; }
 .J-Z, .J-Z .J-J5-Ji, .J-Z *     { color: #d5dae9 !important; }
 .T-I.J-J5-Ji.aoO,
 .T-I.aoO.v7.T-I-atl             { background: var(--d-purple) !important;
                                   color: var(--d-bg-dark) !important; font-weight: 600 !important; }
 .T-I.J-J5-Ji.aoO:hover          { background: var(--d-pink) !important; }
+/* Send split button: the "more send options" half was still Gmail blue */
+.T-I.hG.T-I-atl                 { background: var(--d-purple) !important;
+                                  border-left: 1px solid rgba(33,34,44,.35) !important; }
+.T-I.hG.T-I-atl:hover           { background: var(--d-pink) !important; }
+.T-I.hG.T-I-atl .G-asx          { filter: invert(1) brightness(.2) !important; }
 
 /* ---------- menus + dialogs ---------- */
 .J-M, .b7.J-M                   { background: var(--d-bg-light) !important;
