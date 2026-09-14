@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail Dracula
 @namespace      rdj.xyz
-@version        1.4.2
+@version        1.4.3
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -47,7 +47,18 @@ form[role=search] .gsar_a:hover { background: var(--d-line) !important; }   /* k
 form[role=search] .gssb_i td.gssb_a { border-left-color: var(--d-purple) !important; }
 form[role=search] .gssb_i .asor_e,
 form[role=search] .gssb_i .asor_k { color: var(--d-fg-dim) !important; }   /* 5.9:1 on --d-line */
-form[role=search] .aSP          { border-top-color: var(--d-line) !important; }
+form[role=search] .aSP,
+form[role=search] td.gssb_e     { border-top-color: var(--d-line) !important; }
+/* empty-field state: recent searches (black text, dark clock sprite) */
+form[role=search] tr.RZftce     { background: var(--d-bg-light) !important; }
+form[role=search] .gstq_a,
+form[role=search] .gsfs         { color: var(--d-fg) !important; }
+form[role=search] .gssb_l       { background: var(--d-line) !important; }   /* 1px divider above the footer, drawn as a bg */
+/* footer row: 'All search results for "..."' (black) and "Press ENTER" (#5f6368) */
+form[role=search] .gsas-d       { color: var(--d-fg) !important; }
+form[role=search] .gsas_a       { color: var(--d-meta) !important; }
+form[role=search] .asor_i5,
+form[role=search] .gsaq_b       { filter: invert(1) !important; opacity: .7; }   /* clock sprite + "remove from history" x */
 form[role=search] .H2           { background: transparent !important; border-color: var(--d-line) !important; }
 form[role=search] .H2:hover     { background: var(--d-line) !important; }
 form[role=search] .H5          { color: var(--d-fg-dim) !important; }
@@ -114,7 +125,10 @@ tr.zA:hover .yW span, tr.zA.x7 .yW span { color: var(--d-fg) !important; }
 
 /* search-term highlight keeps Gmail's yellow; the row/hover rules above would make its text white (1.3:1) */
 span.il, tr.zA span.il,
-tr.zA:hover span.il             { color: var(--d-bg-dark) !important; }
+tr.zA.yO .bog span.il, tr.zA.zE .bog span.il,
+tr.zA.yO .y2 span.il, tr.zA.zE .y2 span.il,
+tr.zA:hover .bog span.il, tr.zA.x7 .bog span.il,
+tr.zA:hover .y2 span.il, tr.zA.x7 .y2 span.il { color: var(--d-bg-dark) !important; }   /* must out-rank the row-state rules */
 
 /* Label chips: recolor ONLY Gmail's default grey (#e1e3e1) chips.
    Chips carrying a user-picked label colour are left untouched. */
@@ -180,6 +194,32 @@ div.bAR [class*="mUIrbf-anl"]   { color: var(--d-cyan) !important; }
 .nH.qY .bga                     { border-top-color: var(--d-line) !important; }
 .nH.qY .tl, .nH.qY .an0 img     { filter: invert(1) !important; opacity: .8; }
 
+/* newer Material smart card (shipments: "Shipped / Track package / View order") */
+.aHU .DC5CAd                    { background: var(--d-bg-light) !important;
+                                  border: 1px solid var(--d-line) !important; }
+.DC5CAd .b4qJse, .DC5CAd .SI7yuc,
+.DC5CAd .oRwJhe                 { color: var(--d-fg) !important; }
+.DC5CAd .s7IPpf, .DC5CAd .OIzUn { color: var(--d-meta) !important; }
+.DC5CAd svg                     { fill: var(--d-fg-dim) !important; }
+/* filled button = primary action, same treatment as Send */
+.DC5CAd [class~="UywwFc-I"]     { background: var(--d-purple) !important; }
+.DC5CAd [class~="UywwFc-I"]:hover { background: var(--d-pink) !important; }
+.DC5CAd .UywwFc-anl             { color: var(--d-bg-dark) !important; font-weight: 600 !important; }
+/* tonal button = secondary, same purple-tint as the selected nav pill */
+.DC5CAd [class~="FOBRw-I"]      { background: var(--d-sel-nav) !important; }
+.DC5CAd [class~="FOBRw-I"]:hover { background: var(--d-line) !important; }
+.DC5CAd .FOBRw-anl              { color: var(--d-purple) !important; }
+/* "Based on this email" / "Correct?" under the card */
+.CHBOjb, .CHBOjb span           { color: var(--d-meta) !important; }
+/* Material icon buttons in the reading pane (print, new window, thumbs, emoji, reply, more)
+   are drawn #444746 for a light page: lift them to a readable secondary tone */
+.nH.a98.iY [class~="pYTkkf-JX-I"],
+.nH.a98.iY [class~="pYTkkf-JX-I"] svg { color: var(--d-meta) !important; fill: var(--d-meta) !important; }
+/* message-header star outline is a black PNG on ::before; only the empty state, so a starred (yellow) one keeps its colour */
+.nH.a98.iY [aria-label="Not starred"] .T-KT::before { filter: invert(1) brightness(.8) !important; }
+.nH.a98.iY [class~="pYTkkf-JX-I"]:hover,
+.nH.a98.iY [class~="pYTkkf-JX-I"]:hover svg { color: var(--d-fg) !important; fill: var(--d-fg) !important; }
+
 /* sender details popup (the arrow under "to me") */
 .ajA.SK                         { background: var(--d-bg-light) !important;
                                   border: 1px solid var(--d-line) !important; border-radius: 8px !important;
@@ -218,7 +258,7 @@ span.ams:hover                  { background: var(--d-line) !important;
 .aaZ, td.Ap, .aDj.ahe,
 .aoI, .GP, .btC, .aGb,
 td.I5:has(.editable), table.IG  { background: var(--d-bg-light) !important; }   /* .bzE only while focused */
-td.I5:has(.editable)            { box-shadow: 0 0 0 1px var(--d-line) !important; }
+.ip.adB td.I5:has(.editable)    { box-shadow: 0 0 0 1px var(--d-line) !important; }   /* inline reply only: compose's header cell is td.I5 too */
 .ip.adB .aoI                    { background: transparent !important; }   /* inline reply: avatar gutter stays pane-coloured */
 /* Gmail treats compose as a light surface and draws its icons as dark PNGs (*_nv700 / *_black).
    On the dark surface they vanish, so flip them; Gmail's own opacity still marks disabled ones. */
@@ -232,7 +272,7 @@ td.I5:has(.editable)            { box-shadow: 0 0 0 1px var(--d-line) !important
 .aDj.ahe, .aDj.ahe *            { border-color: var(--d-line) !important; }
 input.agP, input.aoT, textarea.aoT,
 .aoD input, .vO                 { color: var(--d-fg) !important; background: transparent !important; }
-.aoD .vT, .az9 span, .afV,
+.aoD .vT, .az9 span, .afV, .oL.aDm,
 .agP::placeholder,
 .aoT::placeholder               { color: var(--d-meta) !important; }
 .gO.aQY, .aQY, .aB.gQ,
