@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail Dracula
 @namespace      rdj.xyz
-@version        1.4.5
+@version        1.4.6
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -421,6 +421,10 @@ div.t9 .ua                      { color: var(--d-fg) !important; }
 div.t9 .ua:hover, div.t9 .ua.bk5 { background: var(--d-line) !important; }
 div.t9 .ub                      { border-top-color: var(--d-line) !important; }
 
+/* contact hover card frame: its inner shadow is removed (it inverts to a glow), so give it a dark one
+   from out here; drop-shadow follows the card's rounded shape because the frame is transparent around it */
+iframe[src*="contacts.google.com/widget/hovercard"] { filter: drop-shadow(0 6px 16px rgba(0,0,0,.55)) !important; }
+
 /* ---------- right side panel ---------- */
 .brC-brG, .bAw, .no             { background: var(--d-bg-dark) !important; }
 
@@ -440,7 +444,12 @@ div.t9 .ub                      { border-top-color: var(--d-line) !important; }
    names: white card -> dark, dark text -> light; photos and avatars are flipped back.
    NOTE: this frame is shared by other Google apps (Calendar, Drive, Docs), so the card is dark there too. */
 @-moz-document url-prefix("https://contacts.google.com/widget/hovercard") {
-  html                          { filter: invert(.9) hue-rotate(180deg) !important; background: transparent !important; }
+  /* 230deg (not 180) turns Google's blue button/link Dracula purple. Invert and hue-rotate commute,
+     so photos undo it with the opposite rotation and keep their true colours. */
+  html                          { filter: invert(.9) hue-rotate(230deg) !important; background: transparent !important; }
   img, video, picture, canvas,
-  [style*="background-image"]   { filter: invert(1) hue-rotate(180deg) !important; }   /* undo for photos */
+  [style*="background-image"]   { filter: invert(1) hue-rotate(-230deg) !important; }   /* undo for photos */
+  /* the card's dark drop shadow inverts into a light glow around the corners: drop it here;
+     a real dark shadow is added from the Gmail side, outside the inversion */
+  *, *::before, *::after        { box-shadow: none !important; }
 }
