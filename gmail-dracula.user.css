@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail Dracula
 @namespace      rdj.xyz
-@version        1.4.3
+@version        1.4.4
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -79,8 +79,10 @@ div.aic                         { background: transparent !important; }
 .TO.nZ, .TO.aiq, .TO.n1         { background: var(--d-sel-nav) !important; }
 .TO.nZ .nU, .TO.nZ .nU a,
 .TO.nZ .n0                      { color: var(--d-purple) !important; font-weight: 700 !important; }
-.bsU, .n0 .bsU                  { color: var(--d-green) !important; }
-
+.bsU, .n0 .bsU                  { color: var(--d-purple) !important; }   /* unread counts: same purple as unread rows */
+/* collapsed sidebar: Gmail's own rule turns the count into a red dot with exactly this selector
+   (.bhZ = collapsed, .bym = popped open on hover). Dark text covers the case where a number still shows. */
+.bhZ:not(.bym):not(.bjB) .bsU   { background-color: var(--d-purple) !important; color: var(--d-bg-dark) !important; }
 /* Compose — Gmail draws a dark icon/label here, so a purple fill reads correctly */
 .T-I.T-I-KE.L3                  { background: var(--d-purple) !important;
                                   box-shadow: 0 1px 4px rgba(0,0,0,.45) !important; }
@@ -90,6 +92,13 @@ div.aic                         { background: transparent !important; }
    background-COLOR only: .ar9 is also the Delete button's icon, drawn as a background-image */
 .G-atb, .ar9, .aqL, .D.E, .nH.aqK { background-color: transparent !important; }
 .G-atb                          { border-bottom: 1px solid var(--d-line) !important; }
+/* the list toolbar is position:sticky: rows scroll under it, so it needs a solid ground, not transparent
+   (and not Gmail's translucent scrolled tint) */
+div.D.E.G-atb                   { background-color: var(--d-bg) !important; box-shadow: none !important;
+                                  backdrop-filter: none !important; }
+/* while scrolled Gmail lays ::after over the bar: rgba(51,51,51,.8) neutral grey. It sits above the rows
+   (below the buttons), so it is what you actually see: make it solid Dracula so nothing shows through */
+div.D.E.G-atb::after            { background: var(--d-bg) !important; opacity: 1 !important; }
 
 /* ---------- thread list ---------- */
 table.F.cf.zt                   { background: transparent !important; }
@@ -110,7 +119,7 @@ tr.zA.zE .y2                    { color: var(--d-fg-dim) !important; }
 
 /* date column */
 tr.zA .xW span                  { color: var(--d-fg-mute) !important; }
-tr.zA.zE .xW span               { color: var(--d-cyan) !important; }
+tr.zA.zE .xW span               { color: var(--d-purple) !important; }   /* unread date matches the purple unread bar */
 
 /* hover + selected — lift text so it stays >=4.5:1 on the lighter ground */
 tr.zA:hover                     { background-color: var(--d-line) !important;
@@ -152,21 +161,28 @@ div.at[style*="e1e3e1"] .av     { color: var(--d-fg) !important; }
 .ii.gt                          { background: #ffffff !important; border-radius: 8px !important;
                                   padding: 14px 18px !important; box-sizing: border-box !important; }
 
-/* Plain messages get a dark card. "Plain" = the body has no tables and no explicit backgrounds,
-   which is what person-to-person mail (Gmail/Outlook/Apple Mail, incl. styled signatures) looks
-   like. Inline text colours are allowed but remapped: they were picked for a white ground (e.g.
-   #888 signatures fail on dark), so they all become one readable secondary tone.
-   Anything designed (newsletters, receipts, GitHub/Google notifications) has tables or
-   backgrounds and keeps the white card above. Never dark-on-dark. */
-.ii.gt:not(:has(.a3s table, .a3s [bgcolor],
-                .a3s [style*="background-color"], .a3s [style*="background:#"], .a3s [style*="background: #"],
-                .a3s [style*="background:rgb"], .a3s [style*="background: rgb"], .a3s [style*="background:url"])) {
+/* Plain messages get a dark card. "Plain" = the body declares no backgrounds anywhere, which is
+   what person-to-person mail (Gmail/Outlook/Apple Mail, incl. styled signatures) looks like.
+   Tables alone are NOT a signal: signatures and Outlook replies use bare layout tables, and the
+   hidden quoted history counts too, so a table test sent whole threads to the white card.
+   Designed mail (newsletters, receipts, notifications) declares its white/brand backgrounds and
+   keeps the white card above. Inline text colours are remapped to one readable tone. Never dark-on-dark. */
+.ii.gt:not(:has(.a3s [bgcolor], .a3s [background],
+                .a3s [style*="background-color"], .a3s [style*="background-image"],
+                .a3s [style*="background:#"], .a3s [style*="background: #"],
+                .a3s [style*="background:rgb"], .a3s [style*="background: rgb"],
+                .a3s [style*="background:white"], .a3s [style*="background: white"],
+                .a3s [style*="background:url"], .a3s [style*="background: url"])) {
   background: var(--d-bg-light) !important;
   & .a3s                             { color: var(--d-fg) !important; }
-  & .a3s [style*="color:"],
-  & .a3s font[color]                 { color: var(--d-fg-dim) !important; }
+  & .a3s [style*="color" i],
+  & .a3s font[color]                 { color: var(--d-fg-dim) !important;
+                                       /* signatures often write color:#000 !important inline, which beats any
+                                          stylesheet; text-fill-color paints the glyphs regardless */
+                                       -webkit-text-fill-color: var(--d-fg-dim) !important; }
   & .a3s a,
-  & .a3s a [style*="color:"]         { color: var(--d-cyan) !important; }
+  & .a3s a [style*="color" i],
+  & .a3s a font[color]               { color: var(--d-cyan) !important; -webkit-text-fill-color: var(--d-cyan) !important; }
   & .a3s blockquote                  { border-left-color: var(--d-fg-mute) !important; }
   & .ajR                             { background: var(--d-line) !important; }   /* "..." trimmed-quote toggle */
   & .ajR .ajT                        { filter: invert(1) !important; }
@@ -209,6 +225,9 @@ div.bAR [class*="mUIrbf-anl"]   { color: var(--d-cyan) !important; }
 .DC5CAd [class~="FOBRw-I"]      { background: var(--d-sel-nav) !important; }
 .DC5CAd [class~="FOBRw-I"]:hover { background: var(--d-line) !important; }
 .DC5CAd .FOBRw-anl              { color: var(--d-purple) !important; }
+/* the same card shell carries the Gemini "AI Overview": bullets are unclassed spans inheriting #444746 */
+.aHU .DC5CAd :is(ul, ol, li, span:not([class])) { color: var(--d-fg-dim) !important; }
+.aHU a.R6DxZc                   { color: var(--d-cyan) !important; }   /* "Learn more" under the overview */
 /* "Based on this email" / "Correct?" under the card */
 .CHBOjb, .CHBOjb span           { color: var(--d-meta) !important; }
 /* Material icon buttons in the reading pane (print, new window, thumbs, emoji, reply, more)
@@ -295,12 +314,106 @@ input.agP, input.aoT, textarea.aoT,
 .T-I.hG.T-I-atl:hover           { background: var(--d-pink) !important; }
 .T-I.hG.T-I-atl .G-asx          { filter: invert(1) brightness(.2) !important; }
 
+/* ---------- settings page (#settings/*) ----------
+   Gmail's Dark theme leaves this panel near-white (.nH.r4 = rgba(255,255,255,.95)).
+   color-scheme gives native dark checkboxes/radios/selects; accent-color makes them Dracula. */
+.nH.ar4 .nH.fY, .nH.ar4 .nH.r4  { background: var(--d-bg) !important; }
+.nH.ar4 .nH.fY                  { border-bottom: 1px solid var(--d-line) !important; }
+.nH.ar4 .nH.r4                  { color: var(--d-fg) !important; color-scheme: dark; accent-color: var(--d-purple); }
+.nH.ar4 .nH.r4 :is(td, th, div, span, label, b, p, li, h2, h3):not(.Ar.Au *)
+                                { color: var(--d-fg) !important; }
+/* the same :not() as above so these out-rank the catch-all (span links like "Edit tools" are span.sA[role=link]) */
+.nH.ar4 .nH.r4 :is(a, [role=link], .e, .sA):not(.Ar.Au *),
+.nH.ar4 .nH.r4 :is(a, [role=link]) *:not(.Ar.Au *) { color: var(--d-cyan) !important; }
+.nH.ar4 .nH.r4 span.rb:not(.Ar.Au *) { color: var(--d-meta) !important; }   /* "346 conversations" etc. */
+.nH.ar4 .nH.r4 table.alO        { background: transparent !important; }   /* labels table had its own white ground */
+/* row hover is painted by Gmail's script (no :hover rule exists) in light grey; keep rows clear and tint them ourselves */
+.nH.ar4 .nH.r4 tr, .nH.ar4 .nH.r4 tr > td { background-color: transparent !important; }
+.nH.ar4 .nH.r4 table.alO tr:hover > td { background-color: var(--d-line) !important; }
+/* hovering a label name adds .alB to div.alC: a white click-to-rename box. Keep the hint, dark. */
+.nH.ar4 .nH.r4 table.alO .alC.alB { background: var(--d-bg-dark) !important; border-color: #6272a4 !important;
+                                  color: var(--d-fg) !important; }
+/* "Default text style" preview toolbar: same dark PNG icons as compose, but outside .M9 */
+.nH.ar4 .qK :is(.aaA, .J-Z-M-I-JG, .J-JN-M-I-JG) { filter: invert(1) brightness(.95) !important; }
+.nH.ar4 .qK .J-Z-axR            { background: var(--d-line) !important; }   /* toolbar dividers */
+.nH.ar4 .nH.r4 :is(td, tr, table, div) { border-color: var(--d-line) !important; }
+.nH.ar4 .nH.r4 td.rZ            { background: var(--d-line) !important; }   /* labels table dividers */
+/* tabs: every link is a.f0; the ACTIVE one has aria-selected=true (its wrapper is .fZ, inactive ones .f1) */
+.nH.ar4 .fY :is(.fZ, .f1)       { background: transparent !important; }
+.nH.ar4 .fY a.f0                { color: var(--d-fg-dim) !important; }
+.nH.ar4 .fY a.f0:hover          { color: var(--d-fg) !important; }
+.nH.ar4 .fY .fZ *,
+.nH.ar4 .fY a.f0                { border-bottom-color: transparent !important; box-shadow: none !important; }   /* drop Gmail's blue underline */
+.nH.ar4 .fY a.f0[aria-selected=true] { color: var(--d-purple) !important; }
+/* indicator on the full-height wrapper so it sits on the bar's bottom edge, not under the text */
+.nH.ar4 .fY .fZ                 { border-bottom-color: transparent !important;
+                                  box-shadow: inset 0 -3px 0 var(--d-purple) !important; }
+/* form controls */
+.nH.ar4 .nH.r4 :is(select, input[type=text], input[type=password], input:not([type]), textarea) {
+                                  background: var(--d-bg-dark) !important; color: var(--d-fg) !important;
+                                  border: 1px solid var(--d-line) !important; border-radius: 4px !important; }
+.nH.ar4 .nH.r4 :is(button, input[type=button], input[type=submit]) {
+                                  background: var(--d-line) !important; color: var(--d-fg) !important;
+                                  border: 1px solid #6272a4 !important; border-radius: 6px !important; }
+.nH.ar4 .nH.r4 :is(button, input[type=button], input[type=submit]):hover { background: #6272a4 !important; }
+.nH.ar4 .nH.r4 :is(button, input):disabled { opacity: .5 !important; }
+/* "Default text style" preview + signature editor */
+.nH.ar4 .qK                     { background: var(--d-bg-light) !important; border: 1px solid var(--d-line) !important; }
+.nH.ar4 .qL                     { background: transparent !important; }
+.nH.ar4 .Ar.Au                  { background: var(--d-bg-dark) !important; border: 1px solid var(--d-line) !important; }
+
+/* Quick settings side panel (gear icon): translucent white div.IU over the dark page */
+div.IU                          { background: var(--d-bg-light) !important; color: var(--d-fg) !important;
+                                  box-shadow: inset 1px 0 0 0 var(--d-line) !important;   /* Gmail's is #f1f3f4: a light strip on the left */
+                                  color-scheme: dark; accent-color: var(--d-purple); }
+div.IU :is(.VO, .a21, .Q2, .ST, div, span, label) { color: var(--d-fg) !important; }
+div.IU .OG, div.IU .Q3 > div:first-child:not(:has(*)) { color: var(--d-meta) !important; }   /* section headers */
+div.IU :is(button.Tj, button.OD, [role=link], a) { color: var(--d-cyan) !important; }
+div.IU button.Tj                { border-color: var(--d-line) !important; background: transparent !important; }
+div.IU button.Tj:hover          { background: var(--d-line) !important; }
+div.IU .Q3                      { border-top-color: var(--d-line) !important; }
+div.IU :is(button.OB, button.SV) { filter: invert(1) brightness(.85) !important; }   /* dark PNG icons */
+/* radios: the real input is hidden; span.Vo::before is a 20px Material icon PNG (blue when checked,
+   dark ring otherwise), ::after is only the hover ripple. Replace the PNG with a CSS ring in Dracula colours. */
+/* option thumbnails are white PNG cards with blue accents: invert to dark cards; the extra 50deg
+   turns the blue accents Dracula purple. Important first (orange marker) and Starred first (yellow
+   star) skip the shift, which would turn them green. Theme photos (img.OF except the white preview) untouched. */
+div.IU :is(img.a2U, img.QZ, img.Vm, img.XK, img.OF[src*="basicwhite"]) {
+                                  filter: invert(.86) hue-rotate(230deg) !important;   /* .86: white lands near --d-bg, not black */
+                                  border-radius: 4px !important; }
+div.IU img.Vm:is([src*="Importantfirst"], [src*="Starredfirst"]) { filter: invert(.86) hue-rotate(180deg) !important; }
+/* "Conversation view" checkbox: input.SS is hidden (1x1); span.ST::before draws a 20px blue PNG.
+   Swap it for a CSS box: light outline when off, purple fill + dark tick (inline SVG) when on. */
+div.IU input.SS + span.ST::before { background: none !important; opacity: 1 !important;
+                                  border: 2px solid var(--d-fg-dim) !important; border-radius: 4px !important;
+                                  box-sizing: border-box !important; }
+div.IU input.SS:checked + span.ST::before {
+                                  border-color: var(--d-purple) !important;
+                                  background: var(--d-purple) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%2321222c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat !important; }
+/* every section wraps them in a different label class (Density .QX, Inbox type .Vn, Reading pane .XL) */
+div.IU label span.Vo::before    { background: none !important; opacity: 1 !important;
+                                  border: 2px solid var(--d-fg-dim) !important; border-radius: 50% !important;
+                                  box-sizing: border-box !important; }
+div.IU label :checked ~ span.Vo::before,
+div.IU label :checked ~ * span.Vo::before { border-color: var(--d-purple) !important;
+                                  background: radial-gradient(circle, var(--d-purple) 0 4px, transparent 4.5px) !important; }
+
 /* ---------- menus + dialogs ---------- */
 .J-M, .b7.J-M                   { background: var(--d-bg-light) !important;
                                   border: 1px solid var(--d-line) !important;
                                   box-shadow: 0 8px 28px rgba(0,0,0,.55) !important; }
-.J-N                            { color: var(--d-fg) !important; }
+.J-N, .J-M .J-N-Jz              { color: var(--d-fg) !important; }   /* item text sits in .J-N-Jz with its own #202124 */
 .J-N:hover, .J-N.J-N-JT         { background: var(--d-line) !important; }
+.J-M .J-N-JX                    { filter: invert(1) brightness(.9) !important; }   /* item icons are dark PNGs */
+.J-M .J-Kh                      { border-top-color: var(--d-line) !important; }    /* divider was #ebebeb */
+.J-M .asd                       { color: var(--d-meta) !important; }               /* "Select messages to see more actions" */
+/* Support (?) menu in the top bar: its own white div.t9 */
+div.t9[role=menu]               { background: var(--d-bg-light) !important;
+                                  border: 1px solid var(--d-line) !important;
+                                  box-shadow: 0 8px 28px rgba(0,0,0,.55) !important; }
+div.t9 .ua                      { color: var(--d-fg) !important; }
+div.t9 .ua:hover, div.t9 .ua.bk5 { background: var(--d-line) !important; }
+div.t9 .ub                      { border-top-color: var(--d-line) !important; }
 
 /* ---------- right side panel ---------- */
 .brC-brG, .bAw, .no             { background: var(--d-bg-dark) !important; }
@@ -313,4 +426,15 @@ input.agP, input.aoT, textarea.aoT,
 ::-webkit-scrollbar-thumb:hover { background: #6272a4; }
 ::-webkit-scrollbar-corner      { background: var(--d-bg-dark); }
 
+}
+
+/* ---------- contact hover card (hover a sender's avatar/name) ----------
+   It is a cross-origin iframe from contacts.google.com, so the Gmail block above can't reach it,
+   and its DOM can't be inspected from Gmail. Colour inversion is used because it needs no class
+   names: white card -> dark, dark text -> light; photos and avatars are flipped back.
+   NOTE: this frame is shared by other Google apps (Calendar, Drive, Docs), so the card is dark there too. */
+@-moz-document url-prefix("https://contacts.google.com/widget/hovercard") {
+  html                          { filter: invert(.9) hue-rotate(180deg) !important; background: transparent !important; }
+  img, video, picture, canvas,
+  [style*="background-image"]   { filter: invert(1) hue-rotate(180deg) !important; }   /* undo for photos */
 }
