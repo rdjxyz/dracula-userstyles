@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Gmail Dracula
 @namespace      rdj.xyz
-@version        1.4.4
+@version        1.4.5
 @description    Dracula palette for Gmail. Layers on Gmail's built-in Dark theme. All text (list, reading pane and compose) verified >=4.5:1 WCAG AA.
 @author         rdj
 @preprocessor   default
@@ -357,6 +357,12 @@ input.agP, input.aoT, textarea.aoT,
                                   border: 1px solid #6272a4 !important; border-radius: 6px !important; }
 .nH.ar4 .nH.r4 :is(button, input[type=button], input[type=submit]):hover { background: #6272a4 !important; }
 .nH.ar4 .nH.r4 :is(button, input):disabled { opacity: .5 !important; }
+/* Inbox tab: the category-tabs illustration is a white PNG; same dark-card treatment as the Quick settings
+   thumbnails. The importance-markers picture next to it is a VIDEO thumbnail, deliberately left alone. */
+.nH.ar4 .nH.r4 img[src*="io_tabbed"] { filter: invert(.86) hue-rotate(230deg) !important; border-radius: 4px !important; }
+/* disabled groups (e.g. "Reading pane position" while the pane is off) are faded with div.X0 at
+   opacity .38 = ~3:1 on dark. .6 keeps them visibly disabled but readable (~6:1). */
+.nH.ar4 .nH.r4 .X0              { opacity: .6 !important; }
 /* "Default text style" preview + signature editor */
 .nH.ar4 .qK                     { background: var(--d-bg-light) !important; border: 1px solid var(--d-line) !important; }
 .nH.ar4 .qL                     { background: transparent !important; }
