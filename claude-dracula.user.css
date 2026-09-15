@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.7.2
+@version        1.7.3
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -368,6 +368,13 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
 :is(html, .cds-root)[data-mode="dark"] main.dframe-content .bg-page.grid {
   background-color: #1b1c26 !important;
   box-shadow: 0 0 0 32px #1c1d28 !important;
+}
+/* Side "bleed" strips. The composer column is narrower than the chat, so the site also masks the areas left and
+   right of it: two bg-page strips hung from the composer's top edge (top-full, widths --bleed-start/--bleed-end)
+   down to the bottom of the window. Flat bg-page reads as a lighter slab across the whole width over our
+   gradient; give them the same bottom-of-gradient tones as the centre band so all three read as one surface. */
+:is(html, .cds-root)[data-mode="dark"] [data-chat-input-container] .bg-page[class*="--bleed-"] {
+  background: linear-gradient(180deg, #1c1d28 0%, #1b1c26 100%) !important;
 }
 :is(html, .cds-root)[data-mode="dark"] .page-fade-b {
   background: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0) 100%) !important;
