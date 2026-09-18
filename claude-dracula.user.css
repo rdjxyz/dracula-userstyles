@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.7.3
+@version        1.7.4
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -456,6 +456,12 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
 :is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(216,118,86)"] { fill: #bd93f9 !important; }
 :is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(190,104,77)"] { fill: #9a6ee0 !important; }
 :is(html, .cds-root)[data-mode="dark"] .group\/approval-dock svg path[fill="rgb(139,139,139)"] { fill: #6272a4 !important; }
+/* Turn-status "working" mark (the dots left of "Figuring…", "Searching the web…" on long turns):
+   data-cds=WorkingMark plays PNG sprite sheets with clay baked in, set as inline background-image,
+   so --cds-clay only reaches its static fallback dot. Flatten the sprite to black, then filter to #bd93f9. */
+:is(html, .cds-root)[data-mode="dark"] [data-cds="WorkingMark"] span[style*="background-image"] {
+  filter: brightness(0) saturate(100%) invert(59%) sepia(53%) saturate(481%) hue-rotate(218deg) brightness(100%) contrast(96%) !important;
+}
 
 /* ---- Artifact viewer shell (claude.ai/code/artifact/*, /public/artifacts/*, and the same shell
    embedded in chat/Code panels) ---------------------------------------------------------------
