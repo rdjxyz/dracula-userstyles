@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Figma Dracula
 @namespace      rdj.xyz
-@version        2.0.0
+@version        1.1.0
 @description    The official Dracula palette for figma.com: file browser, team
                 dashboard, community, settings, and the Design, FigJam, Slides,
                 Make and Buzz editors. Layers on Figma's built-in Dark theme
@@ -30,8 +30,8 @@
 
    Family map: blue → purple, purple → pink, pink → cyan, persimmon → orange,
    teal → cyan, violet → purple, green/red/yellow/orange → their Dracula hue.
-   Exceptions: components are purple and Design's selection is cyan (see the
-   "selection -> cyan" block).
+   Exceptions: components are purple, and selection in Design and FigJam is
+   cyan (see the "selection -> cyan" blocks).
    Ramps are only overridden under `[data-preferred-theme=dark]`, so
    Figma's Light theme is untouched.
 
@@ -389,8 +389,9 @@
    The ramp remap alone would give selection = purple (Figma's blue) and
    components = pink (Figma's purple). The semantic tokens are re-pointed:
    components to the violet ramp (#BD93F9) in every editor, and selection to
-   the teal ramp (#8BE9FD) in the Design editor only. Other editors
-   keep their own selection hue (FigJam pink, Dev Mode green, Slides orange…).
+   the teal ramp (#8BE9FD) in Design and FigJam (rules at the end of this
+   section). Other editors keep their own selection hue (Dev Mode green,
+   Slides orange…).
    Figma's canvas reads these (plus the editor's "design" family) at load and
    on theme change, so the on-canvas selection box and component outlines
    follow too. Steps mirror
@@ -442,68 +443,6 @@
   --color-border-oncomponent: var(--ramp-violet-800) !important;
   --color-fsTextComponentOnDarkCanvas: var(--ramp-violet-300) !important;
 }
-[data-preferred-theme=dark]:not([data-editor-theme]),
-[data-preferred-theme=dark][data-editor-theme=design],
-[data-preferred-theme=dark] [data-editor-theme=design] {
-  --color-bg-selected: var(--ramp-pale-teal-800) !important;
-  --color-bg-selected-hover: var(--ramp-pale-teal-700) !important;
-  --color-bg-selected-pressed: var(--ramp-pale-teal-800) !important;
-  --color-bg-selected-secondary: #3A4D5A !important; /* pale-teal "850" */
-  --color-bg-selected-strong: var(--ramp-teal-500) !important;
-  --color-bg-selected-tertiary: #3A4D5A !important;
-  --color-border-selected: var(--ramp-teal-500) !important;
-  --color-border-selected-strong: var(--ramp-teal-400) !important;
-  --color-icon-selected: var(--ramp-teal-400) !important;
-  --color-icon-selected-secondary: var(--ramp-teal-500) !important;
-  --color-icon-selected-tertiary: var(--ramp-teal-600) !important;
-  --color-text-selected: var(--ramp-teal-400) !important;
-  --color-bgselectedarea: #8BE9FD33 !important;
-  --color-fsGridCellOutline: #A5EEFD99 !important;
-  --color-fsGridCellSelection: #A5EEFD4C !important;
-  --color-fsAutoFillHighlight: #8BE9FD33 !important;
-  --color-fsNodeHandle: var(--ramp-teal-600) !important;
-  --color-fsTextSelectedOnDarkCanvas: var(--ramp-teal-400) !important;
-  --color-fsTextSelectedOnLightCanvas: var(--ramp-teal-600) !important;
-  /* The canvas draws the selection box, handles and size badge from the
-     editor's own "design" family, not from *-selected. */
-  --color-bg-design: var(--ramp-teal-500) !important;
-  --color-bg-design-hover: var(--ramp-teal-600) !important;
-  --color-bg-design-pressed: var(--ramp-teal-600) !important;
-  --color-bg-design-secondary: var(--ramp-teal-700) !important;
-  --color-bg-design-tertiary: var(--ramp-pale-teal-800) !important;
-  --color-border-design: var(--ramp-teal-700) !important;
-  --color-border-design-strong: var(--ramp-teal-400) !important;
-  --color-border-fs-design: var(--ramp-teal-300) !important;
-  --color-border-ondesign: var(--ramp-teal-600) !important;
-  --color-fsBorderDesignShadowStrong: var(--ramp-teal-600) !important;
-  --color-icon-design: var(--ramp-teal-400) !important;
-  --color-icon-design-pressed: var(--ramp-teal-300) !important;
-  --color-text-design: var(--ramp-teal-400) !important;
-  --color-text-design-pressed: var(--ramp-teal-300) !important;
-}
-[data-preferred-theme=dark][data-enhanced-contrast]:not([data-editor-theme]),
-[data-preferred-theme=dark][data-enhanced-contrast][data-editor-theme=design],
-[data-preferred-theme=dark][data-enhanced-contrast] [data-editor-theme=design] {
-  --color-bg-selected: var(--ramp-pale-teal-800) !important;
-  --color-bg-selected-hover: var(--ramp-pale-teal-600) !important;
-  --color-bg-selected-pressed: var(--ramp-pale-teal-700) !important;
-  --color-bg-selected-secondary: var(--ramp-pale-teal-900) !important;
-  --color-bg-selected-strong: var(--ramp-teal-400) !important;
-  --color-bg-selected-tertiary: var(--ramp-pale-teal-800) !important;
-  --color-border-selected: var(--ramp-teal-400) !important;
-  --color-border-selected-strong: var(--ramp-teal-300) !important;
-  --color-bg-design: var(--ramp-teal-400) !important;
-  --color-bg-design-hover: var(--ramp-teal-300) !important;
-  --color-bg-design-pressed: var(--ramp-teal-300) !important;
-  --color-bg-design-secondary: var(--ramp-teal-400) !important;
-  --color-bg-design-tertiary: var(--ramp-pale-teal-700) !important;
-  --color-border-design: var(--ramp-teal-400) !important;
-  --color-border-design-strong: var(--ramp-teal-300) !important;
-  --color-border-fs-design: var(--ramp-pale-teal-500) !important;
-  --color-border-ondesign: var(--ramp-teal-800) !important;
-  --color-border-ondesign-strong: var(--ramp-teal-1000) !important;
-}
-
 /* --- whiteboard: forced dark (body stays light in this editor) ------------------ */
 [data-preferred-theme=light][data-editor-theme=whiteboard],
 [data-preferred-theme=light] [data-editor-theme=whiteboard] {
@@ -1654,6 +1593,79 @@
 /* No white flash before Figma paints its first surface */
 html { background-color: #282A36 !important; }
 
+/* --- selection -> cyan (Design + FigJam) ---------------------------------------
+   Placed after the forced-dark FigJam block so it wins the tie there. The
+   canvas draws the selection box, handles and size badge from the editor's
+   "design" family as well as *-selected, so both are re-pointed. */
+[data-preferred-theme=dark]:not([data-editor-theme]),
+[data-preferred-theme=dark][data-editor-theme=design],
+[data-preferred-theme=dark] [data-editor-theme=design],
+[data-preferred-theme][data-editor-theme=whiteboard],
+[data-preferred-theme] [data-editor-theme=whiteboard] {
+  --color-bg-selected: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-hover: var(--ramp-pale-teal-700) !important;
+  --color-bg-selected-pressed: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-secondary: #3A4D5A !important; /* pale-teal "850" */
+  --color-bg-selected-strong: var(--ramp-teal-500) !important;
+  --color-bg-selected-tertiary: #3A4D5A !important;
+  --color-border-selected: var(--ramp-teal-500) !important;
+  --color-border-selected-strong: var(--ramp-teal-400) !important;
+  --color-icon-selected: var(--ramp-teal-400) !important;
+  --color-icon-selected-secondary: var(--ramp-teal-500) !important;
+  --color-icon-selected-tertiary: var(--ramp-teal-600) !important;
+  --color-text-selected: var(--ramp-teal-400) !important;
+  --color-bgselectedarea: #8BE9FD33 !important;
+  --color-fsGridCellOutline: #A5EEFD99 !important;
+  --color-fsGridCellSelection: #A5EEFD4C !important;
+  --color-fsAutoFillHighlight: #8BE9FD33 !important;
+  --color-fsNodeHandle: var(--ramp-teal-600) !important;
+  --color-fsTextSelectedOnDarkCanvas: var(--ramp-teal-400) !important;
+  --color-fsTextSelectedOnLightCanvas: var(--ramp-teal-600) !important;
+  --color-fsBorderSelectedImmutableNode: var(--ramp-teal-500) !important;
+  --color-fsBorderSelectedImmutableNodeSecondary: var(--ramp-teal-300) !important;
+  --color-fsWidgetFrameTextSelectedOnDarkCanvas: var(--ramp-teal-500) !important;
+  --color-fsWidgetFrameTextSelectedOnLightCanvas: var(--ramp-teal-500) !important;
+  /* The canvas draws the selection box, handles and size badge from the
+     editor's own "design" family, not from *-selected. */
+  --color-bg-design: var(--ramp-teal-500) !important;
+  --color-bg-design-hover: var(--ramp-teal-600) !important;
+  --color-bg-design-pressed: var(--ramp-teal-600) !important;
+  --color-bg-design-secondary: var(--ramp-teal-700) !important;
+  --color-bg-design-tertiary: var(--ramp-pale-teal-800) !important;
+  --color-border-design: var(--ramp-teal-700) !important;
+  --color-border-design-strong: var(--ramp-teal-400) !important;
+  --color-border-fs-design: var(--ramp-teal-300) !important;
+  --color-border-ondesign: var(--ramp-teal-600) !important;
+  --color-fsBorderDesignShadowStrong: var(--ramp-teal-600) !important;
+  --color-icon-design: var(--ramp-teal-400) !important;
+  --color-icon-design-pressed: var(--ramp-teal-300) !important;
+  --color-text-design: var(--ramp-teal-400) !important;
+  --color-text-design-pressed: var(--ramp-teal-300) !important;
+}
+[data-preferred-theme=dark][data-enhanced-contrast]:not([data-editor-theme]),
+[data-preferred-theme=dark][data-enhanced-contrast][data-editor-theme=design],
+[data-preferred-theme=dark][data-enhanced-contrast] [data-editor-theme=design],
+[data-preferred-theme][data-enhanced-contrast][data-editor-theme=whiteboard],
+[data-preferred-theme][data-enhanced-contrast] [data-editor-theme=whiteboard] {
+  --color-bg-selected: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-hover: var(--ramp-pale-teal-600) !important;
+  --color-bg-selected-pressed: var(--ramp-pale-teal-700) !important;
+  --color-bg-selected-secondary: var(--ramp-pale-teal-900) !important;
+  --color-bg-selected-strong: var(--ramp-teal-400) !important;
+  --color-bg-selected-tertiary: var(--ramp-pale-teal-800) !important;
+  --color-border-selected: var(--ramp-teal-400) !important;
+  --color-border-selected-strong: var(--ramp-teal-300) !important;
+  --color-bg-design: var(--ramp-teal-400) !important;
+  --color-bg-design-hover: var(--ramp-teal-300) !important;
+  --color-bg-design-pressed: var(--ramp-teal-300) !important;
+  --color-bg-design-secondary: var(--ramp-teal-400) !important;
+  --color-bg-design-tertiary: var(--ramp-pale-teal-700) !important;
+  --color-border-design: var(--ramp-teal-400) !important;
+  --color-border-design-strong: var(--ramp-teal-300) !important;
+  --color-border-fs-design: var(--ramp-pale-teal-500) !important;
+  --color-border-ondesign: var(--ramp-teal-800) !important;
+  --color-border-ondesign-strong: var(--ramp-teal-1000) !important;
+}
 } /* @-moz-document */
 
 /* ---------------------------------------------------------------------------
