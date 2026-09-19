@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Figma Dracula
 @namespace      rdj.xyz
-@version        1.0.0
+@version        2.0.0
 @description    The official Dracula palette for figma.com: file browser, team
                 dashboard, community, settings, and the Design, FigJam, Slides,
                 Make and Buzz editors. Layers on Figma's built-in Dark theme
@@ -30,6 +30,8 @@
 
    Family map: blue → purple, purple → pink, pink → cyan, persimmon → orange,
    teal → cyan, violet → purple, green/red/yellow/orange → their Dracula hue.
+   Exceptions: components are purple and Design's selection is cyan (see the
+   "selection -> cyan" block).
    Ramps are only overridden under `[data-preferred-theme=dark]`, so
    Figma's Light theme is untouched.
 
@@ -362,8 +364,8 @@
   --color-fsAutoFillHighlight: #BD93F933 !important;
   --color-fsGridCellOutline: #CCABFA99 !important;
   --color-fsGridCellSelection: #CCABFA4C !important;
-  --color-fsGridComponentCellOutline: #FF96D399 !important;
-  --color-fsGridComponentCellSelection: #FF96D34C !important;
+  --color-fsGridComponentCellOutline: #CCABFA99 !important;
+  --color-fsGridComponentCellSelection: #CCABFA4C !important;
   --color-scrollbar: #6272A48C !important;
   --color-bg-slot: #8BE9FD40 !important;
   --color-bginspectpadding: #BD93F9 !important;
@@ -381,6 +383,125 @@
   --color-badge-manual-code-well: #9074BE !important;
 
   color-scheme: dark;
+}
+
+/* --- selection -> cyan, components -> purple ------------------------------------
+   The ramp remap alone would give selection = purple (Figma's blue) and
+   components = pink (Figma's purple). The semantic tokens are re-pointed:
+   components to the violet ramp (#BD93F9) in every editor, and selection to
+   the teal ramp (#8BE9FD) in the Design editor only. Other editors
+   keep their own selection hue (FigJam pink, Dev Mode green, Slides orange…).
+   Figma's canvas reads these (plus the editor's "design" family) at load and
+   on theme change, so the on-canvas selection box and component outlines
+   follow too. Steps mirror
+   Figma's own dark mapping; enhanced contrast has its own, lighter steps. */
+[data-preferred-theme=dark],
+[data-preferred-theme=dark] [data-editor-theme] {
+  --color-bg-component: var(--ramp-violet-500) !important;
+  --color-bg-component-hover: var(--ramp-violet-600) !important;
+  --color-bg-component-pressed: var(--ramp-violet-700) !important;
+  --color-bg-component-secondary: var(--ramp-violet-700) !important;
+  --color-bg-component-tertiary: var(--ramp-pale-violet-800) !important;
+  --color-bg-component-tertiary-hover: var(--ramp-pale-violet-700) !important;
+  --color-bg-component-tertiary-pressed: var(--ramp-pale-violet-600) !important;
+  --color-border-component: var(--ramp-pale-violet-700) !important;
+  --color-border-component-hover: var(--ramp-violet-500) !important;
+  --color-border-component-selected: var(--ramp-violet-400) !important;
+  --color-border-component-strong: var(--ramp-violet-300) !important;
+  --color-icon-component: var(--ramp-violet-400) !important;
+  --color-icon-component-pressed: var(--ramp-violet-300) !important;
+  --color-icon-component-secondary: var(--ramp-pale-violet-500) !important;
+  --color-icon-component-tertiary: var(--ramp-pale-violet-500) !important;
+  --color-text-component: var(--ramp-violet-400) !important;
+  --color-text-component-pressed: var(--ramp-violet-300) !important;
+  --color-text-component-secondary: var(--ramp-pale-violet-400) !important;
+  --color-text-component-tertiary: var(--ramp-pale-violet-500) !important;
+  --color-border-fs-component: var(--ramp-violet-300) !important;
+  --color-border-oncomponent: var(--ramp-violet-600) !important;
+  --color-fsTextComponentOnDarkCanvas: var(--ramp-violet-400) !important;
+  --color-fsTextComponentOnLightCanvas: var(--ramp-violet-600) !important;
+}
+[data-preferred-theme=dark][data-enhanced-contrast],
+[data-preferred-theme=dark][data-enhanced-contrast] [data-editor-theme] {
+  --color-bg-component: var(--ramp-violet-200) !important;
+  --color-bg-component-hover: var(--ramp-violet-300) !important;
+  --color-bg-component-pressed: var(--ramp-violet-400) !important;
+  --color-bg-component-secondary: var(--ramp-pale-violet-400) !important;
+  --color-border-component: var(--ramp-violet-300) !important;
+  --color-border-component-hover: var(--ramp-violet-100) !important;
+  --color-border-component-selected: var(--ramp-violet-200) !important;
+  --color-border-component-strong: var(--ramp-violet-100) !important;
+  --color-icon-component: var(--ramp-violet-300) !important;
+  --color-icon-component-pressed: var(--ramp-violet-200) !important;
+  --color-icon-component-secondary: var(--ramp-violet-300) !important;
+  --color-icon-component-tertiary: var(--ramp-violet-300) !important;
+  --color-text-component: var(--ramp-violet-300) !important;
+  --color-text-component-pressed: var(--ramp-violet-200) !important;
+  --color-text-component-secondary: var(--ramp-violet-300) !important;
+  --color-text-component-tertiary: var(--ramp-violet-300) !important;
+  --color-border-oncomponent: var(--ramp-violet-800) !important;
+  --color-fsTextComponentOnDarkCanvas: var(--ramp-violet-300) !important;
+}
+[data-preferred-theme=dark]:not([data-editor-theme]),
+[data-preferred-theme=dark][data-editor-theme=design],
+[data-preferred-theme=dark] [data-editor-theme=design] {
+  --color-bg-selected: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-hover: var(--ramp-pale-teal-700) !important;
+  --color-bg-selected-pressed: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-secondary: #3A4D5A !important; /* pale-teal "850" */
+  --color-bg-selected-strong: var(--ramp-teal-500) !important;
+  --color-bg-selected-tertiary: #3A4D5A !important;
+  --color-border-selected: var(--ramp-teal-500) !important;
+  --color-border-selected-strong: var(--ramp-teal-400) !important;
+  --color-icon-selected: var(--ramp-teal-400) !important;
+  --color-icon-selected-secondary: var(--ramp-teal-500) !important;
+  --color-icon-selected-tertiary: var(--ramp-teal-600) !important;
+  --color-text-selected: var(--ramp-teal-400) !important;
+  --color-bgselectedarea: #8BE9FD33 !important;
+  --color-fsGridCellOutline: #A5EEFD99 !important;
+  --color-fsGridCellSelection: #A5EEFD4C !important;
+  --color-fsAutoFillHighlight: #8BE9FD33 !important;
+  --color-fsNodeHandle: var(--ramp-teal-600) !important;
+  --color-fsTextSelectedOnDarkCanvas: var(--ramp-teal-400) !important;
+  --color-fsTextSelectedOnLightCanvas: var(--ramp-teal-600) !important;
+  /* The canvas draws the selection box, handles and size badge from the
+     editor's own "design" family, not from *-selected. */
+  --color-bg-design: var(--ramp-teal-500) !important;
+  --color-bg-design-hover: var(--ramp-teal-600) !important;
+  --color-bg-design-pressed: var(--ramp-teal-600) !important;
+  --color-bg-design-secondary: var(--ramp-teal-700) !important;
+  --color-bg-design-tertiary: var(--ramp-pale-teal-800) !important;
+  --color-border-design: var(--ramp-teal-700) !important;
+  --color-border-design-strong: var(--ramp-teal-400) !important;
+  --color-border-fs-design: var(--ramp-teal-300) !important;
+  --color-border-ondesign: var(--ramp-teal-600) !important;
+  --color-fsBorderDesignShadowStrong: var(--ramp-teal-600) !important;
+  --color-icon-design: var(--ramp-teal-400) !important;
+  --color-icon-design-pressed: var(--ramp-teal-300) !important;
+  --color-text-design: var(--ramp-teal-400) !important;
+  --color-text-design-pressed: var(--ramp-teal-300) !important;
+}
+[data-preferred-theme=dark][data-enhanced-contrast]:not([data-editor-theme]),
+[data-preferred-theme=dark][data-enhanced-contrast][data-editor-theme=design],
+[data-preferred-theme=dark][data-enhanced-contrast] [data-editor-theme=design] {
+  --color-bg-selected: var(--ramp-pale-teal-800) !important;
+  --color-bg-selected-hover: var(--ramp-pale-teal-600) !important;
+  --color-bg-selected-pressed: var(--ramp-pale-teal-700) !important;
+  --color-bg-selected-secondary: var(--ramp-pale-teal-900) !important;
+  --color-bg-selected-strong: var(--ramp-teal-400) !important;
+  --color-bg-selected-tertiary: var(--ramp-pale-teal-800) !important;
+  --color-border-selected: var(--ramp-teal-400) !important;
+  --color-border-selected-strong: var(--ramp-teal-300) !important;
+  --color-bg-design: var(--ramp-teal-400) !important;
+  --color-bg-design-hover: var(--ramp-teal-300) !important;
+  --color-bg-design-pressed: var(--ramp-teal-300) !important;
+  --color-bg-design-secondary: var(--ramp-teal-400) !important;
+  --color-bg-design-tertiary: var(--ramp-pale-teal-700) !important;
+  --color-border-design: var(--ramp-teal-400) !important;
+  --color-border-design-strong: var(--ramp-teal-300) !important;
+  --color-border-fs-design: var(--ramp-pale-teal-500) !important;
+  --color-border-ondesign: var(--ramp-teal-800) !important;
+  --color-border-ondesign-strong: var(--ramp-teal-1000) !important;
 }
 
 /* --- whiteboard: forced dark (body stays light in this editor) ------------------ */
@@ -623,13 +744,13 @@
   --color-bg-brand-tertiary: var(--ramp-pale-purple-800) !important;
   --color-bg-brand-tertiary-hover: var(--ramp-pale-purple-700) !important;
   --color-bg-brand-tertiary-pressed: var(--ramp-pale-purple-600) !important;
-  --color-bg-component: var(--ramp-purple-500) !important;
-  --color-bg-component-hover: var(--ramp-purple-600) !important;
-  --color-bg-component-pressed: var(--ramp-purple-700) !important;
-  --color-bg-component-secondary: var(--ramp-purple-700) !important;
-  --color-bg-component-tertiary: var(--ramp-pale-purple-800) !important;
-  --color-bg-component-tertiary-hover: var(--ramp-pale-purple-700) !important;
-  --color-bg-component-tertiary-pressed: var(--ramp-pale-purple-600) !important;
+  --color-bg-component: var(--ramp-violet-500) !important;
+  --color-bg-component-hover: var(--ramp-violet-600) !important;
+  --color-bg-component-pressed: var(--ramp-violet-700) !important;
+  --color-bg-component-secondary: var(--ramp-violet-700) !important;
+  --color-bg-component-tertiary: var(--ramp-pale-violet-800) !important;
+  --color-bg-component-tertiary-hover: var(--ramp-pale-violet-700) !important;
+  --color-bg-component-tertiary-pressed: var(--ramp-pale-violet-600) !important;
   --color-bg-danger: var(--ramp-red-500) !important;
   --color-bg-danger-hover: var(--ramp-red-600) !important;
   --color-bg-danger-pressed: var(--ramp-red-700) !important;
@@ -807,10 +928,10 @@
   --color-border-assistive-strong: var(--ramp-pink-400) !important;
   --color-border-brand: var(--ramp-pale-purple-700) !important;
   --color-border-brand-strong: var(--ramp-purple-400) !important;
-  --color-border-component: var(--ramp-pale-purple-700) !important;
-  --color-border-component-hover: var(--ramp-purple-500) !important;
-  --color-border-component-selected: var(--ramp-purple-400) !important;
-  --color-border-component-strong: var(--ramp-purple-300) !important;
+  --color-border-component: var(--ramp-pale-violet-700) !important;
+  --color-border-component-hover: var(--ramp-violet-500) !important;
+  --color-border-component-selected: var(--ramp-violet-400) !important;
+  --color-border-component-strong: var(--ramp-violet-300) !important;
   --color-border-danger: var(--ramp-pale-red-700) !important;
   --color-border-danger-strong: var(--ramp-red-400) !important;
   --color-border-design: var(--ramp-blue-700) !important;
@@ -831,7 +952,7 @@
   --color-border-fs: var(--color-border) !important;
   --color-border-fs-assistive: var(--color-border-assistive) !important;
   --color-border-fs-assistive-strong: var(--ramp-pink-500) !important;
-  --color-border-fs-component: var(--ramp-purple-300) !important;
+  --color-border-fs-component: var(--ramp-violet-300) !important;
   --color-border-fs-component-strong: var(--color-bg-fs-component) !important;
   --color-border-fs-design: var(--ramp-blue-300) !important;
   --color-border-fs-design-strong: var(--color-bg-fs-design) !important;
@@ -870,7 +991,7 @@
   --color-border-onassistive-strong: var(--ramp-white-1000) !important;
   --color-border-onbrand: var(--ramp-purple-600) !important;
   --color-border-onbrand-strong: var(--ramp-white-1000) !important;
-  --color-border-oncomponent: var(--ramp-purple-600) !important;
+  --color-border-oncomponent: var(--ramp-violet-600) !important;
   --color-border-oncomponent-strong: var(--ramp-white-1000) !important;
   --color-border-ondanger: var(--ramp-red-600) !important;
   --color-border-ondanger-strong: var(--ramp-white-1000) !important;
@@ -969,8 +1090,8 @@
   --color-fsSnappingOverlay: var(--ramp-blue-600) !important;
   --color-fsStickyAuthorTextOnDark: var(--ramp-white-600) !important;
   --color-fsStickyAuthorTextOnLight: var(--ramp-black-500) !important;
-  --color-fsTextComponentOnDarkCanvas: var(--ramp-purple-400) !important;
-  --color-fsTextComponentOnLightCanvas: var(--ramp-purple-600) !important;
+  --color-fsTextComponentOnDarkCanvas: var(--ramp-violet-400) !important;
+  --color-fsTextComponentOnLightCanvas: var(--ramp-violet-600) !important;
   --color-fsTextOnDarkCanvas: var(--color-textondarkcanvas) !important;
   --color-fsTextOnDarkCanvasSecondary: var(--color-textondarkcanvassecondary) !important;
   --color-fsTextOnLightCanvas: var(--color-textonlightcanvas) !important;
@@ -1002,10 +1123,10 @@
   --color-icon-brand-pressed: var(--ramp-purple-500) !important;
   --color-icon-brand-secondary: var(--ramp-purple-600) !important;
   --color-icon-brand-tertiary: var(--ramp-pale-purple-800) !important;
-  --color-icon-component: var(--ramp-purple-400) !important;
-  --color-icon-component-pressed: var(--ramp-purple-300) !important;
-  --color-icon-component-secondary: var(--ramp-pale-purple-500) !important;
-  --color-icon-component-tertiary: var(--ramp-pale-purple-500) !important;
+  --color-icon-component: var(--ramp-violet-400) !important;
+  --color-icon-component-pressed: var(--ramp-violet-300) !important;
+  --color-icon-component-secondary: var(--ramp-pale-violet-500) !important;
+  --color-icon-component-tertiary: var(--ramp-pale-violet-500) !important;
   --color-icon-danger: var(--ramp-red-400) !important;
   --color-icon-danger-hover: var(--ramp-red-300) !important;
   --color-icon-danger-pressed: var(--ramp-red-300) !important;
@@ -1226,10 +1347,10 @@
   --color-text-brand: var(--ramp-purple-400) !important;
   --color-text-brand-secondary: var(--color-text-brand) !important;
   --color-text-brand-tertiary: var(--color-text-brand) !important;
-  --color-text-component: var(--ramp-purple-400) !important;
-  --color-text-component-pressed: var(--ramp-purple-300) !important;
-  --color-text-component-secondary: var(--ramp-pale-purple-450) !important;
-  --color-text-component-tertiary: var(--ramp-pale-purple-500) !important;
+  --color-text-component: var(--ramp-violet-400) !important;
+  --color-text-component-pressed: var(--ramp-violet-300) !important;
+  --color-text-component-secondary: var(--ramp-pale-violet-450) !important;
+  --color-text-component-tertiary: var(--ramp-pale-violet-500) !important;
   --color-text-danger: var(--ramp-red-400) !important;
   --color-text-danger-secondary: var(--color-text-danger) !important;
   --color-text-danger-tertiary: var(--color-text-danger) !important;
@@ -1509,8 +1630,8 @@
   --color-fsAutoFillHighlight: #BD93F933 !important;
   --color-fsGridCellOutline: #CCABFA99 !important;
   --color-fsGridCellSelection: #CCABFA4C !important;
-  --color-fsGridComponentCellOutline: #FF96D399 !important;
-  --color-fsGridComponentCellSelection: #FF96D34C !important;
+  --color-fsGridComponentCellOutline: #CCABFA99 !important;
+  --color-fsGridComponentCellSelection: #CCABFA4C !important;
   --color-scrollbar: #6272A48C !important;
   --color-bg-slot: #8BE9FD40 !important;
   --color-bginspectpadding: #BD93F9 !important;
