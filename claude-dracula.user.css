@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.8.2
+@version        1.8.3
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -363,9 +363,12 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
    composer and (b) a band under the composer that carries a 32px shadow reaching up behind the composer card.
    We keep that exact geometry and recolour both to the bottom slice of the page gradient (#1d1e2a -> #1b1c26),
    which is within a shade of the body gradient at that height on any normal viewport. The 24px gap directly
-   above the composer stays transparent so the fade reads as a fade, not an edge. */
+   above the composer stays transparent so the fade reads as a fade, not an edge.
+   The band used to be tagged .bg-page.grid; the site dropped .grid, so match it on the 32px page-bg
+   shadow instead — that spread is what reaches up behind the composer card, so it is the band's real
+   signature. Applies to the chat composer and the Cowork task composer alike (same component). */
 :is(html, .cds-root)[data-mode="dark"] main.dframe-content div.sticky.bottom-0 { background: none !important; }
-:is(html, .cds-root)[data-mode="dark"] main.dframe-content .bg-page.grid {
+:is(html, .cds-root)[data-mode="dark"] main.dframe-content .bg-page[class*="0_0_0_32px"] {
   background-color: #1b1c26 !important;
   box-shadow: 0 0 0 32px #1c1d28 !important;
 }
@@ -408,6 +411,20 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
    keeping the site's stop positions (solid -> 90% at the midpoint -> transparent). */
 :is(html, .cds-root)[data-mode="dark"] [data-testid="answer-now-above-composer"] {
   background-image: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0.9) 50%, rgba(29, 30, 42, 0) 100%) !important;
+}
+/* Image attachments in the transcript: each message's thumbnails sit in a small snap-scroller with a
+   16px edge fade on either side, painted from --bg-000 (a raised surface tone) whether or not the strip
+   actually overflows. The card behind them is transparent, so over the page gradient those fades read as
+   a light wash on the first thumbnail's left edge and a light bar floating in the empty space to its
+   right. Same treatment as the Code transcript fades: drop the paint and mask the scroller instead, so
+   the edges dissolve into whatever gradient is behind them and the empty area stays untouched. Keeps the
+   site's 16px geometry, so a strip that really does overflow still fades. */
+:is(html, .cds-root)[data-mode="dark"] div.overflow-hidden:has(> div.snap-x) > div[class*="from-bg-000"] {
+  background: none !important;
+}
+:is(html, .cds-root)[data-mode="dark"] div.overflow-hidden:has(> div.snap-x) > div.snap-x {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
+          mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
 }
 
 /* ---- Sidebar toggle stays top-left ------------------------------------------------
