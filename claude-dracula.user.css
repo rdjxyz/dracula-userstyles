@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.8.3
+@version        1.8.4
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -359,6 +359,15 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
   background-color: transparent !important;
   background-image: none !important;
 }
+/* ...except the chat header's scrim (.df-header-backdrop): the title row floats over the transcript, and
+   with its scrim cleared, messages scrolled straight through the title. Bring it back as glass: a
+   see-through top-of-gradient tint plus a blur. The site's own mask (black 66% -> transparent over
+   72px) still applies, so the frost fades out below the bar instead of ending on a hard edge. */
+:is(html, .cds-root)[data-mode="dark"] div.df-header-backdrop.pointer-events-none.absolute.inset-0.bg-surface-1 {
+  background-color: rgba(45, 41, 67, .72) !important;   /* #2d2943, the body gradient at header height */
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+          backdrop-filter: blur(14px) saturate(140%);
+}
 /* Composer area. Messages scroll behind the composer, so the site masks them with (a) a 48px fade above the
    composer and (b) a band under the composer that carries a 32px shadow reaching up behind the composer card.
    We keep that exact geometry and recolour both to the bottom slice of the page gradient (#1d1e2a -> #1b1c26),
@@ -411,6 +420,19 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
    keeping the site's stop positions (solid -> 90% at the midpoint -> transparent). */
 :is(html, .cds-root)[data-mode="dark"] [data-testid="answer-now-above-composer"] {
   background-image: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0.9) 50%, rgba(29, 30, 42, 0) 100%) !important;
+}
+/* Masked composer dock. When the dock is masked ([data-cds-dock-masked], e.g. with a notice such as
+   "Now using credits" stacked above the input), the composer wrapper and each notice's dock card switch
+   on in-data-cds-dock-masked:bg-page: a flat #272935 rectangle behind the rounded cards, so the cards'
+   top corners showed a lighter square and the notice sat on a slab with visible left/right edges. Let
+   the gradient through instead, and recolour the notice's soft fade (a ::before strip above the card)
+   to the same bottom-of-page tones as .page-fade-b. Verified in Claude in Chrome with the masked state
+   forced on the Code composer: the wrapper goes from #272935 to transparent. */
+:is(html, .cds-root)[data-mode="dark"] [data-cds-dock-masked] [class*="in-data-cds-dock-masked:bg-page"] {
+  background-color: transparent !important;
+}
+:is(html, .cds-root)[data-mode="dark"] [data-cds-dock-masked] [class*="in-data-cds-dock-masked:before:page-fade-b-soft"]::before {
+  background: linear-gradient(to top, #1d1e2a 0%, rgba(29, 30, 42, 0) 100%) !important;
 }
 /* Image attachments in the transcript: each message's thumbnails sit in a small snap-scroller with a
    16px edge fade on either side, painted from --bg-000 (a raised surface tone) whether or not the strip
