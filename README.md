@@ -18,6 +18,10 @@ claude.ai in dark mode: chat, Claude Code, and the artifact viewer. Remaps the s
 
 [![Install with Stylus](https://img.shields.io/badge/Install-with_Stylus-bd93f9?style=for-the-badge&labelColor=282a36)](https://raw.githubusercontent.com/rdjxyz/dracula-userstyles/main/claude-dracula.user.css)
 
+The tab icon isn't painted by the page, so CSS can't recolour it. An optional companion userscript for [Tampermonkey](https://www.tampermonkey.net) swaps the orange asterisk for a Dracula purple one. Chrome needs "Allow User Scripts" switched on in Tampermonkey's extension details.
+
+[![Install with Tampermonkey](https://img.shields.io/badge/Install-with_Tampermonkey-ff79c6?style=for-the-badge&labelColor=282a36)](https://raw.githubusercontent.com/rdjxyz/dracula-userstyles/main/claude-dracula.user.js)
+
 ## Claude in Chrome glow
 
 The border Claude in Chrome paints around a tab while it controls it, recoloured from brand orange to Dracula purple, along with its cursor, stop pill and tooltips.
@@ -70,7 +74,7 @@ The Klaviyo app, built on Klaviyo's own design tokens so the theme follows its c
 
 ## Issues
 
-Something off, or a site changed under a style? [Open an issue](https://github.com/rdjxyz/dracula-userstyles/issues/new). Say which style, the `@version` shown in Stylus (or Tampermonkey for the FigJam script), your browser, and a screenshot of the broken surface. The more details the better. Pull requests are welcome too.
+Something off, or a site changed under a style? [Open an issue](https://github.com/rdjxyz/dracula-userstyles/issues/new). Say which style, the `@version` shown in Stylus (or Tampermonkey for the userscripts), your browser, and a screenshot of the broken surface. The more details the better. Pull requests are welcome too.
 
 ## Updating
 
