@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Claude Dracula
 @namespace      rdj.xyz
-@version        1.8.4
+@version        1.9.0
 @description    Dracula palette for claude.ai dark mode. Remaps the site's primitive colour ramps so every surface, accent and status colour follows.
 @author         rdjxyz
 @license        MIT
@@ -375,9 +375,11 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
    above the composer stays transparent so the fade reads as a fade, not an edge.
    The band used to be tagged .bg-page.grid; the site dropped .grid, so match it on the 32px page-bg
    shadow instead — that spread is what reaches up behind the composer card, so it is the band's real
-   signature. Applies to the chat composer and the Cowork task composer alike (same component). */
+   signature. Applies to the chat composer and the Cowork task composer alike (same component).
+   Incognito chats render outside main.dframe-content, so the band is also matched under the composer's
+   own [data-chat-input-container]; otherwise it painted a flat #272935 slab behind the "Reply" card. */
 :is(html, .cds-root)[data-mode="dark"] main.dframe-content div.sticky.bottom-0 { background: none !important; }
-:is(html, .cds-root)[data-mode="dark"] main.dframe-content .bg-page[class*="0_0_0_32px"] {
+:is(html, .cds-root)[data-mode="dark"] :is(main.dframe-content, [data-chat-input-container]) .bg-page[class*="0_0_0_32px"] {
   background-color: #1b1c26 !important;
   box-shadow: 0 0 0 32px #1c1d28 !important;
 }
@@ -448,6 +450,13 @@ html[data-frame-uuid]:not([data-mode="light"]) .cds-root {
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
           mask-image: linear-gradient(to right, transparent 0, #000 16px, #000 calc(100% - 16px), transparent 100%) !important;
 }
+
+/* ---- Incognito window frame --------------------------------------------------------
+   Incognito wraps the page in an inverted frame: a fixed, rounded cut-out whose 100px
+   shadow is --cds-text-primary, a neutral off-white under this palette. Keep the inverted
+   look but make it Alucard (Dracula's light theme) cream, #fffbeb. The header row and the
+   "Exit incognito" button keep the site's dark text, which reads fine on it. */
+:is(html, .cds-root)[data-mode="dark"] .animate-incognito-frame-in { box-shadow: 0 0 0 100px #fffbeb !important; }
 
 /* ---- Sidebar toggle stays top-left ------------------------------------------------
    Pinned open, the site swaps the top-left toggle for the "Claude" wordmark and moves
